@@ -1,0 +1,381 @@
+---Scripts para operção sem o banco mongo e cte
+------TABELA EMITENTE-------
+
+ALTER TABLE [dbo].[emitente]
+ADD [NSUCTE_SEQUENCIA] bigint NULL
+GO
+ALTER TABLE [dbo].[emitente]
+ADD [NSU_DATA_CONSULTA_CTE] datetime NULL
+GO
+
+--SEQUENCES PARA AS NOVAS TABELAS----
+CREATE SEQUENCE   consultacte_id_seq
+ START WITH 0
+ INCREMENT BY 1
+ MINVALUE 0
+ MAXVALUE 99999999
+ CACHE 
+
+CREATE SEQUENCE   cancelamento_id_seq
+ START WITH 0
+ INCREMENT BY 1
+ MINVALUE 0
+ MAXVALUE 99999999
+ CACHE 
+CREATE SEQUENCE  inutilizacao_id_seq
+ START WITH 0
+ INCREMENT BY 1
+ MINVALUE 0
+ MAXVALUE 99999999
+ CACHE 
+CREATE SEQUENCE   manifesto_id_seq
+ START WITH 0
+ INCREMENT BY 1
+ MINVALUE 0
+ MAXVALUE 99999999
+ CACHE 
+CREATE SEQUENCE cartacorrecao_id_seq
+ START WITH 0
+ INCREMENT BY 1
+ MINVALUE 0
+ MAXVALUE 99999999
+ CACHE 
+CREATE SEQUENCE  mde_id_seq
+ START WITH 0
+ INCREMENT BY 1
+ MINVALUE 0
+ MAXVALUE 99999999
+ CACHE 
+
+---TABELAS DE EVENTOS DO DFE-----
+CREATE TABLE   inutilizacao
+(
+    id bigint NOT NULL DEFAULT (NEXT VALUE FOR dbo.inutilizacao_id_seq) ,
+    cnpj varchar(20)  NOT NULL,
+    codigo_loja integer,
+    umeroInicial integer,
+    numeroFinal integer,
+    serie integer,
+    modelo varchar(20),
+    ano integer,
+    justificativa varchar(255),
+    protocolo varchar(50),
+    xmotivo varchar(255),
+    cstat integer,
+    xmlEvento varchar(max),
+    danfe varchar(max),
+    danfeBase64 varchar(max),
+    dhRecbto datetime ,
+    tpAmb varchar(20),
+    UF varchar(20),
+    verAplic varchar(50),
+    CONSTRAINT inutilizacao_pkey PRIMARY KEY (id)
+   
+);
+
+CREATE TABLE cartacorrecao
+(
+    id bigint NOT NULL DEFAULT (NEXT VALUE FOR dbo.cartacorrecao_id_seq),
+    cnpj varchar(20)  NOT NULL,
+    chave  varchar(50)  NOT NULL,
+    codigo_loja integer NOT NULL,
+    dataHora datetime ,
+    sequencia integer,   
+    xcorrecao varchar(255),
+    xmlEvento varchar(max),
+    cstat integer,   
+    xmotivo varchar(150),    
+    protocoloCce varchar(50),
+    emailDestinatario varchar(255),
+    danfe varchar(max),
+    danfeBase64 varchar(max),    
+    tpAmb varchar(20),
+    xmlRetorno varchar(max),  
+    CONSTRAINT cartacorrecao_pkey PRIMARY KEY (id)
+   
+);
+
+
+CREATE TABLE manifesto
+(
+    id bigint NOT NULL DEFAULT (NEXT VALUE FOR dbo.manifesto_id_seq),
+    cnpj varchar(20)  NOT NULL,
+    chave  varchar(44)  NOT NULL,
+    codigo_loja integer NOT NULL,
+    dataHora datetime ,
+    sequencia integer,   
+    justificativa varchar(255),
+    xcorrecao varchar(255),
+    xmlEvento varchar(max),
+    cstat integer,   
+    xmotivo varchar(255),    
+    protocoloCce varchar(255),
+    emailDestinatario varchar(255),
+    danfe varchar(max),
+    danfeBase64 varchar(max),    
+    tpAmb varchar(20),
+    xmlRetorno varchar(max),  
+    descEvento varchar(max),
+    CONSTRAINT manifesto_pkey PRIMARY KEY (id)
+   
+);
+
+
+
+CREATE TABLE cancelamento
+(
+    id bigint NOT NULL DEFAULT (NEXT VALUE FOR dbo.cancelamento_id_seq),
+    cnpj varchar(14)  NOT NULL,
+    codigo_loja integer NOT NULL,
+    numero  integer ,
+    serie  integer,
+    chave varchar(50) ,
+    ambiente integer ,
+    protocoloNota varchar(50) ,
+    protocoloCancelamento varchar(50),
+    data datetime ,
+    justificativa varchar(255) ,
+    cstat integer ,
+    xmotivo varchar(255) ,
+    xmlRetorno varchar(max) ,
+    danfe varchar(max) ,
+    danfeBase64 varchar(max) ,
+    emailDestinatario varchar(255),   
+    CONSTRAINT cancelamento_pkey PRIMARY KEY (id)
+   
+);
+
+----CTE-----------------------------------
+CREATE TABLE cteConsulta
+(
+    id bigint NOT NULL DEFAULT (NEXT VALUE FOR dbo.consultacte_id_seq),
+    codigo_loja integer NOT NULL,   
+    nsu varchar(50),  
+    chDFe varchar(50),
+    CNPJCPF varchar(50),
+    xNome varchar(50),
+    IE varchar(50),
+    dhEmi DateTime,
+    tpNF varchar(50),
+    vNF numeric(12,2),
+    digVal varchar(50),
+    dhRecbto DateTime,
+    nProt varchar(50),
+    cSitDFe varchar(50),
+    EventocOrgao integer,
+    EventoCNPJCPF varchar(50),
+    EventochDFe varchar(50),
+    EventodhEvento DateTime,
+    EventotpEvento varchar(50),
+    EventonSeqEvento integer,
+    EventoxEvento varchar(50),
+    EventodhRecbto DateTime,
+    EventonProt varchar(50),
+    xml varchar(max),
+
+    CONSTRAINT consultacte_pkey PRIMARY KEY (id)
+   
+);
+
+CREATE TABLE [dbo].[cteIde] (
+  [CTEID] int IDENTITY(1, 1) NOT NULL,
+  [CHCTE] varchar(50) ,
+  [CUF] varchar(50) ,
+  [CCT] varchar(50) ,
+  [CFOP] varchar(50) ,
+  [NATOP] varchar(250) ,
+  [FORPAG] int NULL,
+  [MOD] int NULL,
+  [SERIE] int NULL,
+  [NCT] int NULL,
+  [EMIT_CNPJ] varchar(30) ,
+  [REMET_CNPJ] varchar(30) ,
+  [EXPED_CNPJ] varchar(30) ,
+  [DT_EMIS] datetime NULL,
+  [TPCTE] int NULL,
+  [PROCEMI] int NULL,
+  [MODAL] varchar(30) ,
+  [TPSERV] int NULL,
+  [CMUNINI] int NULL,
+  [XMUNINI] varchar(150) ,
+  [UFINI] varchar(2) ,
+  [CMUNFIM] int NULL,
+  [XMUNFIM] varchar(250) ,
+  [UFFIM] varchar(2) ,
+  [RETIRA] varchar(10) ,
+  [TOMA] int NULL,
+  [NR_AUTORIZADOR] varchar(50) ,
+  [VTPREST] money NULL,
+  [VREC] money NULL,
+  [ICMS_CST] varchar(3) ,
+  [VLR_ICMS] money NULL,
+  [PERC_ICMS] money NULL,
+  [VLR_BASE_ICMS] money NULL,
+  [CARGA] varchar(150) ,
+  [PROPRED] varchar(150) ,
+  [SEG_RESPSEG] varchar(500) ,
+  [SEG_XSEG] varchar(150) ,
+  [SEG_NAPOL] varchar(150) ,
+  [SEG_VCARGA] varchar(150) ,
+  [TPMODAL] varchar(30) ,
+  [RNTRC] varchar(150) ,
+  [DPREV] datetime NULL,
+  [LOTA] int NULL,
+  [TP_AMB] int NULL,
+  [VER_APLIC] varchar(150) ,
+  [DT_RECBTO] datetime NULL,
+  [NPROT] varchar(150) ,
+  [DIG_VAL] varchar(150) ,
+  [CSTAT] int NULL,
+  [XMOTIVO] varchar(max) ,
+  [OBSERVACAO] varchar(max) ,
+  [VERSAO] varchar(30) , 
+  [XML] varchar(max) ,
+  CONSTRAINT [PK_cteIde] PRIMARY KEY CLUSTERED ([CTEID])
+)
+ON [PRIMARY]
+GO
+
+CREATE TABLE [dbo].[cteDestinatario](
+	[CTEID] [int] NOT NULL,
+	[CNPJ_CPF] [varchar](20) NULL,
+	[IE] [varchar](20) NULL,
+	[XNOME] [varchar](350) NULL,
+	[XLGR] [varchar](350) NULL,
+	[NRO] [varchar](30) NULL,
+	[XBAIRRO] [varchar](100) NULL,
+	[CMUN] [int] NULL,
+	[XMUN] [varchar](20) NULL,
+	[CEP] [int] NULL,
+	[UF] [varchar](10) NULL,
+	[FONE] [varchar](20) NULL,
+	[CPAIS] [int] NULL,
+	[XPAIS] [varchar](20) NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[cteDestinatario]  WITH CHECK ADD  CONSTRAINT [cteDestinatario_FK] FOREIGN KEY([CTEID])
+REFERENCES [dbo].[cteIde] ([CTEID])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[cteDestinatario] CHECK CONSTRAINT [cteDestinatario_FK]
+GO
+
+CREATE TABLE [dbo].[cteEmitente](
+	[CTEID] [int] NOT NULL,
+	[CNPJ] [varchar](20) NULL,
+	[IE] [varchar](20) NULL,
+	[XNOME] [varchar](350) NULL,
+	[XLGR] [varchar](350) NULL,
+	[NRO] [varchar](30) NULL,
+	[XBAIRRO] [varchar](350) NULL,
+	[CMUN] [int] NULL,
+	[XMUN] [varchar](20) NULL,
+	[CEP] [int] NULL,
+	[UF] [varchar](10) NULL,
+	[FONE] [varchar](30) NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[cteEmitente]  WITH CHECK ADD  CONSTRAINT [cteEmitente_FK] FOREIGN KEY([CTEID])
+REFERENCES [dbo].[cteIde] ([CTEID])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[cteEmitente] CHECK CONSTRAINT [cteEmitente_FK]
+GO
+
+CREATE TABLE [dbo].[cteExpedidor](
+	[CTEID] [int] NOT NULL,
+	[CNPJ_CPF] [varchar](20) NULL,
+	[IE] [varchar](20) NULL,
+	[XNOME] [varchar](350) NULL,
+	[XLGR] [varchar](350) NULL,
+	[NRO] [varchar](30) NULL,
+	[XBAIRRO] [varchar](100) NULL,
+	[CMUN] [int] NULL,
+	[XMUN] [varchar](20) NULL,
+	[CEP] [int] NULL,
+	[UF] [varchar](10) NULL,
+	[FONE] [varchar](20) NULL,
+	[CPAIS] [int] NULL,
+	[XPAIS] [varchar](20) NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[cteExpedidor]  WITH CHECK ADD  CONSTRAINT [cteExpedidor_FK] FOREIGN KEY([CTEID])
+REFERENCES [dbo].[cteIde] ([CTEID])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[cteExpedidor] CHECK CONSTRAINT [cteExpedidor_FK]
+GO
+CREATE TABLE [dbo].[cteRecebedor](
+	[CTEID] [int] NOT NULL,
+	[CNPJ_CPF] [varchar](20) NULL,
+	[IE] [varchar](20) NULL,
+	[XNOME] [varchar](350) NULL,
+	[XLGR] [varchar](350) NULL,
+	[NRO] [varchar](30) NULL,
+	[XBAIRRO] [varchar](100) NULL,
+	[CMUN] [int] NULL,
+	[XMUN] [varchar](20) NULL,
+	[CEP] [int] NULL,
+	[UF] [varchar](10) NULL,
+	[FONE] [varchar](20) NULL,
+	[CPAIS] [int] NULL,
+	[XPAIS] [varchar](20) NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[cteRecebedor]  WITH CHECK ADD  CONSTRAINT [cteRecebedor_FK] FOREIGN KEY([CTEID])
+REFERENCES [dbo].[cteIde] ([CTEID])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[cteRecebedor] CHECK CONSTRAINT [cteRecebedor_FK]
+GO
+
+CREATE TABLE [dbo].[cteRemetente](
+	[CTEID] [int] NOT NULL,
+	[CNPJ_CPF] [varchar](20) NULL,
+	[IE] [varchar](20) NULL,
+	[XNOME] [varchar](350) NULL,
+	[XLGR] [varchar](350) NULL,
+	[NRO] [varchar](30) NULL,
+	[XBAIRRO] [varchar](100) NULL,
+	[CMUN] [int] NULL,
+	[XMUN] [varchar](20) NULL,
+	[CEP] [int] NULL,
+	[UF] [varchar](10) NULL,
+	[FONE] [varchar](20) NULL,
+	[CPAIS] [int] NULL,
+	[XPAIS] [varchar](20) NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[cteRemetente]  WITH CHECK ADD  CONSTRAINT [cteRemetente_FK] FOREIGN KEY([CTEID])
+REFERENCES [dbo].[cteIde] ([CTEID])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[cteRemetente] CHECK CONSTRAINT [cteRemetente_FK]
+GO
+CREATE TABLE [dbo].[cteServicoComplementar](
+	[CTEID] [int] NOT NULL,
+	[XNOME] [varchar](300) NULL,
+	[VCOMP] [money] NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[cteServicoComplementar]  WITH CHECK ADD  CONSTRAINT [cteServicoComplementar_FK] FOREIGN KEY([CTEID])
+REFERENCES [dbo].[cteIde] ([CTEID])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[cteServicoComplementar] CHECK CONSTRAINT [cteServicoComplementar_FK]
+GO
+
+
+
+

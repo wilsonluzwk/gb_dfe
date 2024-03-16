@@ -1,0 +1,64 @@
+﻿<!-- begin #content -->
+<div id="content" class="content">
+    <!-- begin breadcrumb -->
+    <ol class="breadcrumb pull-right">
+        <li><a href="javascript:;" data-click="dashboard">Home</a></li>
+        <li><a href="javascript:;">Dashboard</a></li>
+        <li class="active">Logs</li>
+    </ol>
+    <!-- end breadcrumb -->
+    <!-- begin page-header -->
+    <h1 class="page-header">Logs <small>Historico de atividades</small></h1>
+    <!-- end page-header -->
+    <div class="row">
+
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="form-group" id="selectfiliais_FG">
+                <label class="control-label" for="selectfiliais">Empresa</label>
+                <select class="input input-sm form-control user-success" id="selectfiliais" name="selectfiliais"
+                    size="1">
+                    <option value="Global">Todos </option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <div class="form-group" id="selectdata_FG">
+                <label class="form-check-label" style="padding-right: 10px;">
+                    Data: <input type="date" id="selectdata" class="form-control">
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- begin timeline -->
+<ul class="timeline">
+
+    <li>
+
+        <!-- begin timeline-icon -->
+        <div class="timeline-icon" id="icoRefresh">
+            <a href="javascript:;"><i class="fa fa-spinner"></i></a>
+        </div>
+        <!-- end timeline-icon -->
+        <!-- begin timeline-body -->
+        <div class="timeline-body" id="ancoline">
+            <textarea id="logbody" name="logbody" rows="40" cols="120"
+                style="border: none;outline: none;background-color: transparen;resize: none;" readonly></textarea>
+        </div>
+        <!-- begin timeline-body -->
+    </li>
+</ul>
+<!-- end timeline -->
+</div>
+<!-- end #content -->
+
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script>
+    App.restartGlobalFunction();
+    App.setPageTitle('GBDFE  | lOG');
+
+    $.getScript('assets/js2/view/nfe_view_log.js').done(function () {
+        log.init();
+    });
+</script>
+<!-- ================== END PAGE LEVEL JS ================== -->

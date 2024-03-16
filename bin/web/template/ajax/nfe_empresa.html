@@ -1,0 +1,532 @@
+﻿<!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+<link rel="stylesheet" href="assets/plugins/sweetalert/sweetalert2.min.css" />
+<link rel="stylesheet" href="assets/plugins/jquery-file-upload/css/jquery.fileupload.css" />
+
+<!-- ================== END PAGE LEVEL STYLE ================== -->
+<!-- begin #content -->
+<meta charset="utf-8" />
+<div id="content" class="content">
+   <!-- begin breadcrumb -->
+   <ol class="breadcrumb pull-right">
+      <li><a href="javascript:;" data-click="dashboard">Home</a></li>
+      <li><a href="javascript:;">Empresas</a></li>
+      <li class="active">Empresas</li>
+   </ol>
+   <!-- end breadcrumb -->
+   <!-- begin page-header -->
+   <h1 class="page-header">Empresas <small></small></h1>
+   <!-- end page-header -->
+   <!-- begin row -->
+   <div class="row">
+      <!-- begin col-6 -->
+      <div class="col-md-12">
+         <!-- begin panel -->
+         <div class="panel panel-inverse" data-sortable-id="form-stuff-1">
+            <div class="panel-heading">
+               <div class="panel-heading-btn">
+                  <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i
+                        class="fa fa-expand"></i></a>
+                  <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i
+                        class="fa fa-repeat"></i></a>
+                  <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                     data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                  <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i
+                        class="fa fa-times"></i></a>
+               </div>
+               <h4 class="panel-title">Parmetros da empresa</h4>
+            </div>
+            <div class="panel-body">
+               <div class="row row well" id="modalrow1x" style="margin-bottom :5px;">
+
+                  <div class="col-sm-12 col-md-6 col-lg-6">
+                     <div class="form-group" id="selectfiliais_FG">
+                        <label class="control-label" for="selectfiliais">Empresa</label>
+                        <select class="input input-sm form-control user-success" id="selectfiliais" name="selectfiliais"
+                           size="1">
+                           <option value="0">Nada selecionado </option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="col-sm-12 col-md-6 col-lg-6" style="margin-top:20px;">
+                     <button type="submit" id="empresaGravar" class="btn btn-sm btn-success">Gravar</button>
+                     <button type="submit" id="empresaReload" class="btn btn-sm btn-warning">Cancelar</button>
+
+                  </div>
+
+
+               </div>
+               <div class="row row well">
+                  <div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
+                     <div class="panel-heading p-0">
+                        <div class="tab-overflow">
+                           <ul class="nav nav-tabs">
+                              <li class="active"><a href="#nav-tab_danfe" data-toggle="tab">Danfe</a></li>
+                              <li class=""><a href="#nav-tab_certificado" data-toggle="tab">Certificado</a></li>
+                              <li class=""><a href="#nav-tab_email" data-toggle="tab">E-Mail</a></li>
+                              <li class=""><a href="#nav-tab_rt" data-toggle="tab">Dados RT</a></li>
+                              <li class=""><a href="#nav-tab_webservice" data-toggle="tab">Webservice</a></li>
+                           </ul>
+                        </div>
+                     </div>
+                     <div class="tab-content">
+                        <div class="tab-pane fade active in well well-lg" id="nav-tab_danfe">
+                           <h3 class="m-t-10">Danfe</h3>
+
+                           <div class="row well" id="modalrow14" Dados basicos style="margin-top :10px;">
+
+                              <div class="col-xs-12 col-sm-3 col-lg-3">
+                                 <label for="danfe_qtdcopias"> Qtd. Copias NFe :</label>
+                                 <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <input type="number" id="danfe_qtdcopias" class="form-control" required>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-3 col-lg-3">
+                                 <div class="defaltspan form-group">
+                                    <label for="danfe_qtdcopnfce">Qtd. Copias NFCe:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                                       <input type="number" id="danfe_qtdcopnfce" class="form-control" required>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-3 col-lg-3">
+                                 <div class="defaltspan form-group">
+                                    <div class="checkbox">
+                                       <label><input type="checkbox" id="danfe_visualiza" value="S">Visualiza
+                                          DANFE</label>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <div class="col-xs-12 col-sm-3 col-lg-3">
+                                 <div class="defaltspan form-group">
+
+                                    <div class="checkbox">
+                                       <label><input type="checkbox" id="danfe_exibefatura" value="S">Exibe
+                                          Fatura?</label>
+                                    </div>
+
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row well" id="modalrow15" Dados basicos style="margin-top :10px;">
+                              <div class="col-xs-12 col-sm-8 col-lg-8">
+                                 <div class="form-group">
+
+                                    <label for="danfe_logomarca">Logomarca:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i
+                                             class="glyphicon glyphicon-picture"></i></span>
+                                       <input type="text" id="danfe_logomarca" class="form-control">
+                                      
+                                    </div>
+                                   
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-4 col-lg-4">
+                                 <div class="defaltspan form-group">
+                                    <label for="danfe_tipodanf"> Tipo de DANF:</label>
+                                    <select id="danfe_tipodanf" class="form-control">
+                                       <option>Sem Geracao</option>
+                                       <option>Retrato</option>
+                                       <option>Paisagem</option>
+                                       <option>Simplificado</option>
+                                       <option>Msg Eletronica</option>
+                                    </select>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row well" id="modalrow16" Dados basicos style="margin-top :10px;">
+                              <div class="col-xs-12 col-sm-3 col-lg-3">
+                                 <div class="defaltspan form-group">
+                                    <label for="danfe_tipodanfce"> Tipo de DANFCe:</label>
+                                    <select id="danfe_tipodanfce" class="form-control">
+                                       <option>Sem Geracao</option>
+                                       <option>Simplificado</option>
+                                       <option>NFCe</option>
+                                       <option>Msg Eletronica</option>
+                                    </select>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-3 col-lg-3">
+                                 <div class="defaltspan form-group">
+                                    <label for="danfe_expandilogo"> Logo marcar:</label>
+                                    <select id="danfe_expandilogo" class="form-control">
+                                       <option  value="C">Em Cima </option>
+                                       <option  value="E">Expandido</option>
+                                       <option  value="L">No Lado</option>                                       
+                                    </select>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="tab-pane fade well well-lg" id="nav-tab_certificado">
+                           <h3 class="m-t-10">Certificado</h3>
+
+                           <div class="row well" id="modalrow18" Dados basicos style="margin-top :10px;">
+                              <div class="col-xs-12 col-sm-4 col-lg-4">
+                                 <label for="cnpj">Cnpj:</label>
+                                 <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <input type="text" id="cnpj" class="form-control campocnpj" required>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-8 col-lg-8">
+                                 <div class="defaltspan form-group">
+                                    <label for="razaoSocial">Razão social:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                                       <input type="text" id="razaoSocial" class="form-control" required>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row  well" id="modalrow18" Dados basicos style="margin-top :10px;">
+                              <div class="col-xs-12 col-sm-4 col-lg-4">
+                                 <div class="form-group">
+                                    <label for="ambiente">Ambiente:</label>
+                                    <select id="ambiente" class="form-control">
+                                       <option>Homologação</option>
+                                       <option>Produção</option>
+                                    </select>
+                                 </div>
+                              </div>                           
+                              <div class="col-xs-12 col-sm-4 col-lg-4">
+                                 <div class="dform-group">
+                                    <label for="usafsda">Usa FSDA:</label>
+                                    <div class="input-group">
+                                       <select name="usafsda" id="usafsda" class="form-control">
+                                          <option value="N">Nao</option>
+                                          <option value="S">Sim</option>
+                                       </select>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row  well" id="modalrow19" idcsc style="margin-top :10px;">
+                              <div class="col-xs-12 col-sm-4 col-lg-4">
+                                 <div class="defaltspan form-group">
+                                    <label for="idcsc">Id CSC:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                                       <input type="text" id="idcsc" class="form-control" required>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-8 col-lg-8">
+                                 <div class="dform-group">
+                                    <label for="csc">CSC:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i
+                                             class="glyphicon glyphicon-barcode"></i></span>
+                                       <input type="text" id="csc" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+
+                           </div>
+                           <div class="row  well" id="modalrow26" certificado style="margin-top :10px;">
+                              <div class="col-xs-12 col-sm-8 col-lg-8">
+                                 <div class="form-group">
+
+                                    <label for="nomecertificadoPfx">Certificado:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                                       <input type="text" id="nomecertificadoPfx" disabled class="form-control">
+                                    </div>
+
+                                 </div>
+                                 <input id="fileupload" type="file" name="files[]">
+                              </div>
+                              <div class="col-xs-12 col-sm-4 col-lg-4">
+                                 <div class="form-group">
+                                    <label for="senhaPfx">Senha do certificado:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                       <input type="password" id="senhaPfx" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="tab-pane fade well well-lg" id="nav-tab_email">
+                           <h3 class="m-t-10">E-Mail</h3>
+                           <div class="row row  well" id="modalrow27" style="margin-top :10px;">
+                              <div class="col-xs-12 col-sm-5 col-lg-5">
+                                 <div class="dform-group">
+                                    <label for="email_neemail">Nome Emitente:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon  glyphicon-send"></i></span>
+                                       <input type="text" id="email_neemail" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-5 col-lg-5">
+                                 <div class="dform-group">
+                                    <label for="email_host">Host E-Mail:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon glyphicon-cloud"></i></span>
+                                       <input type="text" id="email_host" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-2 col-lg-2">
+                                 <div class="dform-group">
+                                    <label for="email_port">Porta E-Mail:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                                       <input type="number" id="email_port" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row row  well" id="modalrow29" style="margin-top :10px;">
+                              <div class="col-xs-12 col-sm-6 col-lg-6">
+                                 <div class="dform-group">
+                                    <label for="email_user">Usuário E-Mail:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i
+                                             class="glyphicon  glyphicon-envelope"></i></span>
+                                       <input type="text" id="email_user" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-6 col-lg-6">
+                                 <div class="form-group">
+                                    <label for="email_pass">Senha E-Mail:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                       <input type="password" id="email_pass" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row row  well" id="modalrow31" style="margin-top :10px;">
+                              <div class="col-xs-12 col-sm-2 col-lg-2">
+                                 <div class="checkbox">
+                                    <label><input type="checkbox" id="email_ssl" value="S">Usa SSL ?</label>
+                                 </div>
+
+                              </div>
+                              <div class="col-xs-12 col-sm-2 col-lg-2">
+                                 <div class="checkbox">
+                                    <label><input type="checkbox" id="email_tls" value="S">Usa TLS ?</label>
+                                 </div>
+
+                              </div>
+                              <div class="col-xs-12 col-sm-4 col-lg-4">
+                                 <div class="form-group">
+                                    <label for="email_assunto">Assunto E-Mail:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon glyphicon-link"></i></span>
+                                       <input type="text" id="email_assunto" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-4 col-lg-4">
+                                 <div class="form-group">
+                                    <label for="email_assunto_canc">Assunto E-Mail Canc.:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon glyphicon-link"></i></span>
+                                       <input type="text" id="email_assunto_canc" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row row  well" id="modalrow32" style="margin-top :10px;">
+                              <div class="col-xs-12 col-sm-6 col-lg-6">
+                                 <div class="form-group">
+                                    <label for="email_assunto_cce">Assunto E-Mail Cce.:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon glyphicon-link"></i></span>
+                                       <input type="text" id="email_assunto_cce" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-6 col-lg-6">
+                                 <div class="form-group">
+                                    <label for="email_cc">Copia E-Mail:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i
+                                             class="glyphicon glyphicon-paperclip"></i></span>
+                                       <input type="text" id="email_cc" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row row  well" id="modalrow33" style="margin-top :10px;">
+                              <div class="col-xs-12 col-sm-12 col-lg-12">
+                                 <div class="form-group">
+                                    <label for="email_mensagem">Mensagem E-Mail:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i
+                                             class="glyphicon glyphicon-text-size"></i></span>
+                                       <textarea rows="3" id="email_mensagem" class="form-control"></textarea>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="tab-pane fade well well-lg" id="nav-tab_rt">
+                           <h3 class="m-t-10">Dados RT</h3>
+                           <div class="row row  well" id="modalrow32" style="margin-top :10px;">
+                              <div class="col-xs-12 col-sm-12 col-lg-12">
+                                 <div class="checkbox">
+                                    <label><input type="checkbox" id="rt_ufexige" value="S">Exigência de Responsável
+                                       Técnico ?</label>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-3 col-lg-3">
+                                 <div class="dform-group">
+                                    <label for="rt_cnpj">CNPJ:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon  glyphicon-user"></i></span>
+                                       <input type="text" id="rt_cnpj" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-3 col-lg-3">
+                                 <div class="form-group">
+                                    <label for="rt_xcontato">Nome:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i
+                                             class="glyphicon glyphicon-transfer"></i></span>
+                                       <input type="text" id="rt_xcontato" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-3 col-lg-3">
+                                 <div class="form-group">
+                                    <label for="rt_email">e-Mail:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i
+                                             class="glyphicon glyphicon-envelope"></i></span>
+                                       <input type="text" id="rt_email" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-3 col-lg-3">
+                                 <div class="form-group">
+                                    <label for="rt_fone">Telefone:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i
+                                             class="glyphicon glyphicon-phone-alt"></i></span>
+                                       <input type="text" id="rt_fone" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="tab-pane fade well well-lg" id="nav-tab_webservice">
+                           <h3 class="m-t-10">Webservice</h3>
+                           <div class="row row  well" id="modalrowwebservice" style="margin-top :10px;">
+                              <div class="col-xs-12 col-sm-4 col-lg-4">
+                                 <div class="dform-group">
+                                    <label for="proxy_host">Host Proxy:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                                       <input type="text" id="proxy_host" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-2 col-lg-2">
+                                 <div class="dform-group">
+                                    <label for="proxy_porta">Porta Proxy:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon glyphicon-cloud"></i></span>
+                                       <input type="text" id="proxy_porta" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-3 col-lg-3">
+                                 <div class="dform-group">
+                                    <label for="proxy_user">Usuário Proxy:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                       <input type="text" id="proxy_user" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-3 col-lg-3">
+                                 <div class="dform-group">
+                                    <label for="proxy_pass">Senha proxy:</label>
+                                    <div class="input-group">
+                                       <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                       <input type="text" id="proxy_pass" class="form-control">
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row row  well" id="modalrowwebservice1" style="margin-top :10px;">
+                              <div class="col-xs-12 col-sm-2 col-lg-2">
+                                 <div class="checkbox">
+                                    <label><input type="checkbox" id="danfe_horariodeverao" value="S">Horário de Verão
+                                       ?</label>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-2 col-lg-2">
+                                 <div class="checkbox">
+                                    <label><input type="checkbox" id="danfe_fusohorario" value="S">Fuso Horário UTC
+                                       ?</label>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-2 col-lg-2">
+                                 <div class="checkbox">
+                                    <label><input type="checkbox" id="danfe_usahorariodf" value="S">Usa Horário DF
+                                       ?</label>
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-2 col-lg-2">
+                                 <div class="checkbox">
+                                    <label><input type="checkbox" id="danfe_mdeautomatico" value="S">Mde Automatico
+                                       ?</label>
+                                 </div>
+                              </div>
+                           
+
+                           </div>
+                        </div>
+
+
+                     </div>
+
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- end panel -->
+   </div>
+   <!-- end col-6 -->
+</div>
+<!-- end row -->
+</div>
+<!-- end #content -->
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="assets/plugins/sweetalert/sweetalert2.min.js"></script>
+
+<script>
+   App.setPageTitle('Servidor NFe | Empresas');
+   $.getScript('assets/js2/nfe_app.js').done(function () {
+      $.getScript('assets/plugins/masked-input/masked-input.min.js').done(function () {
+         $.getScript('assets/js2/util/util.forms.js').done(function () {
+            $.getScript('assets/plugins/jquery-file-upload/js/jquery.fileupload.js').done(function () {
+               $.getScript('assets/plugins/jquery-file-upload/js/jquery.iframe-transport.js').done(function () {
+                  $.getScript('assets/plugins/jquery-file-upload/js/jquery.fileupload.js').done(function () {
+                     $.getScript('assets/plugins/jquery-file-upload/js/jquery.fileupload-ui.js').done(function () {
+                        $.getScript('assets/js2/view/nfe_view_empresa.js').done(function () {
+                           empresaConfigMain.init();
+
+
+                        });
+                     });
+                  });
+               });
+            });
+         });
+      });
+   });
+
+</script>
+<!-- ================== END PAGE LEVEL JS ================== -->

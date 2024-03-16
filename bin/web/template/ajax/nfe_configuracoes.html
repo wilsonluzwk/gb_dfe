@@ -1,0 +1,159 @@
+﻿<!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+<link rel="stylesheet" href="assets/plugins/sweetalert/sweetalert2.min.css" />
+<!-- ================== END PAGE LEVEL STYLE ================== -->
+<!-- begin #content -->
+<div id="content" class="content">
+   <!-- begin breadcrumb -->
+   <ol class="breadcrumb pull-right">
+      <li><a href="javascript:;">Home</a></li>
+      <li><a href="javascript:;">Configurações</a></li>
+      <li class="active">Config</li>
+   </ol>
+   <!-- end breadcrumb -->
+   <!-- begin page-header -->
+   <h1 class="page-header">Configurações <small></small></h1>
+   <!-- end page-header -->
+   <!-- begin row -->
+   <div class="row">
+      <!-- begin col-6 -->      
+      <div class="col-md-12">
+         <!-- begin panel -->
+         <div class="panel panel-inverse" data-sortable-id="form-stuff-1">
+            <div class="panel-heading">
+               <div class="panel-heading-btn">
+                  <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default"
+                     data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                  <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success"
+                     data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+                  <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                     data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                  <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
+                     data-click="panel-remove"><i class="fa fa-times"></i></a>
+               </div>
+               <h4 class="panel-title">Parametros</h4>
+            </div>
+            <div class="panel-body">
+               
+               <div class="row  well" id="modalrow18"  Seguranca style="margin-top :10px;">
+                  <div class="col-xs-12 col-sm-4 col-lg-4">
+                     <label for="mongodbserver">Servidor Banco MogoDB:</label>
+                     <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                        <input type="text" id="mongoDbserver" class="form-control">
+                     </div>
+                  </div>
+                  <div class="col-xs-12 col-sm-4 col-lg-4">
+                     <div class="defaltspan form-group">
+                        <label for="timeoutAcbr">Timeout Webserver Sefaz:</label>
+                        <div class="input-group">
+                           <span class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                           <input type="number" id="timeoutAcbr" class="form-control">
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-xs-12 col-sm-4 col-lg-4">
+                     <div class="defaltspan form-group">
+                        <label for="ntentativas">N° Tentativas validação:</label>
+                        <div class="input-group">
+                           <span class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                           <input type="number" id="ntentativas" class="form-control">
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="row  well" id="modalrow19" Proxy style="margin-top :10px;">
+                  <div class="col-xs-12 col-sm-4 col-lg-4">
+                     <div class="dform-group">
+                        <label for="urlProxy">Servidor Proxy:</label>
+                        <div class="input-group">
+                           <span class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                           <input type="text" id="urlProxy" class="form-control">
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-xs-12 col-sm-4 col-lg-4">
+                     <div class="dform-group">
+                        <label for="userProxy">Usuário Proxy:</label>
+                        <div class="input-group">
+                           <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                           <input type="text" id="userProxy" class="form-control">
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-xs-12 col-sm-4 col-lg-4">
+                     <div class="dform-group">
+                        <label for="senhaProxy">Senha Proxy:</label>
+                        <div class="input-group">
+                           <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                           <input type="text" id="senhaProxy" class="form-control">
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="row row  well" id="modalrow20" style="margin-top :10px;">
+                  <div class="col-xs-12 col-sm-2 col-lg-2">
+                     <div class="dform-group">
+                        <label for="cnpjRespTecnico"> CNPJ Responsavel Tecnico:</label>
+                        <div class="input-group">
+                           <span class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                           <input type="number" id="cnpjRespTecnico" class="form-control">
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-xs-12 col-sm-2 col-lg-2">
+                     <div class="dform-group">
+                        <label for="telRespTecnico">Tel Responsavel Tecnico:</label>
+                        <div class="input-group">
+                           <span class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                           <input type="text" id="telRespTecnico" class="form-control" >
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-xs-12 col-sm-4 col-lg-4">
+                     <div class="form-group">
+                      <label for="contatoRespTecnico">Contato Responsavel Tecnico:</label>
+                      <div class="input-group">                       
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                        <input type="text" id="contatoRespTecnico" class="form-control">
+                     </div>
+                     </div>
+                  </div>
+                  <div class="col-xs-12 col-sm-4 col-lg-4">
+                         <div class="dform-group">
+                        <label for="emailRespTecnico">E-mail Responsavel Tecnico:</label>
+                        <div class="input-group">
+                           <span class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                           <input type="text" id="emailRespTecnico" class="form-control">
+                        </div>
+                     </div>
+                  </div>
+                  
+               </div>
+              
+             
+            </div>
+            <div class="row well" id="modalrowbotoes" style="text-align :center;margin-top :10px;">
+               <div class="col-xs-12 col-sm-12 col-lg-12">
+                  <button type="submit" id="rpsgravar" class="btn btn-sm btn-success">Gravar</button>
+                  <button type="submit" id="rpsreload" class="btn btn-sm btn-danger">Cancelar</button>
+               </div>
+            </div>
+         </div>
+         <!-- end panel -->
+      </div>
+      <!-- end col-6 -->
+   </div>
+   <!-- end row -->
+</div>
+<!-- end #content -->
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="assets/plugins/sweetalert/sweetalert2.min.js"></script>
+<script>
+   App.setPageTitle('Painel NFSE | Configurações');
+   $.getScript('assets/js2/nfe_app.js').done(function () {
+       $.getScript('assets/js2/view/nfe_view_configuracao.js').done(function () {
+           nfeConfigMain.init();
+       });
+   });
+</script>
+<!-- ================== END PAGE LEVEL JS ================== -->
