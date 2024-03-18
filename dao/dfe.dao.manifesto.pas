@@ -326,10 +326,6 @@ begin
       qry.SQL.add('  codigo_loja is not null ');
       setFilter(qry, param);
       qry.SQL.add('  order by dhevento desc ');
-
-      qry.SQL.SaveToFile(ExtractFilePath(GetModuleName(HInstance)) +
-        'consultaManifesto.sql');
-
       lresult := OpenQuery(qry);
       result := Tmanifestos.create;
       for i := 0 to lresult.Count - 1 do

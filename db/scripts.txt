@@ -144,8 +144,9 @@ CREATE TABLE cancelamento
     CONSTRAINT cancelamento_pkey PRIMARY KEY (id)
    
 );
-
-----CTE-----------------------------------
+-----------------------------------------------------------------------
+-----------------------Tabelas do CTE----------------------------------
+-----------------------------------------------------------------------
 CREATE TABLE cteConsulta
 (
     id bigint NOT NULL DEFAULT (NEXT VALUE FOR dbo.consultacte_id_seq),
@@ -176,7 +177,9 @@ CREATE TABLE cteConsulta
     CONSTRAINT consultacte_pkey PRIMARY KEY (id)
    
 );
-
+-----------------------------------------------------------------------
+--------------------------------cteIde---------------------------------
+-----------------------------------------------------------------------
 CREATE TABLE [dbo].[cteIde] (
   [CTEID] int IDENTITY(1, 1) NOT NULL,
   [CHCTE] varchar(50) ,
@@ -235,7 +238,9 @@ CREATE TABLE [dbo].[cteIde] (
 )
 ON [PRIMARY]
 GO
-
+-----------------------------------------------------------------------
+--------------------------------cteDestinatario------------------------
+-----------------------------------------------------------------------
 CREATE TABLE [dbo].[cteDestinatario](
 	[CTEID] [int] NOT NULL,
 	[CNPJ_CPF] [varchar](20) NULL,
@@ -260,7 +265,9 @@ GO
 
 ALTER TABLE [dbo].[cteDestinatario] CHECK CONSTRAINT [cteDestinatario_FK]
 GO
-
+-----------------------------------------------------------------------
+--------------------------------cteEmitente----------------------------
+-----------------------------------------------------------------------
 CREATE TABLE [dbo].[cteEmitente](
 	[CTEID] [int] NOT NULL,
 	[CNPJ] [varchar](20) NULL,
@@ -284,7 +291,9 @@ GO
 
 ALTER TABLE [dbo].[cteEmitente] CHECK CONSTRAINT [cteEmitente_FK]
 GO
-
+-----------------------------------------------------------------------
+--------------------------------cteExpedidor---------------------------
+-----------------------------------------------------------------------
 CREATE TABLE [dbo].[cteExpedidor](
 	[CTEID] [int] NOT NULL,
 	[CNPJ_CPF] [varchar](20) NULL,
@@ -310,6 +319,9 @@ GO
 
 ALTER TABLE [dbo].[cteExpedidor] CHECK CONSTRAINT [cteExpedidor_FK]
 GO
+-----------------------------------------------------------------------
+--------------------------------cteRecebedor---------------------------
+-----------------------------------------------------------------------
 CREATE TABLE [dbo].[cteRecebedor](
 	[CTEID] [int] NOT NULL,
 	[CNPJ_CPF] [varchar](20) NULL,
@@ -335,7 +347,9 @@ GO
 
 ALTER TABLE [dbo].[cteRecebedor] CHECK CONSTRAINT [cteRecebedor_FK]
 GO
-
+-----------------------------------------------------------------------
+--------------------------------cteRemetente---------------------------
+-----------------------------------------------------------------------
 CREATE TABLE [dbo].[cteRemetente](
 	[CTEID] [int] NOT NULL,
 	[CNPJ_CPF] [varchar](20) NULL,
@@ -361,6 +375,9 @@ GO
 
 ALTER TABLE [dbo].[cteRemetente] CHECK CONSTRAINT [cteRemetente_FK]
 GO
+-----------------------------------------------------------------------
+------------------------------cteServicoComplementar-------------------
+-----------------------------------------------------------------------
 CREATE TABLE [dbo].[cteServicoComplementar](
 	[CTEID] [int] NOT NULL,
 	[XNOME] [varchar](300) NULL,
@@ -375,7 +392,25 @@ GO
 
 ALTER TABLE [dbo].[cteServicoComplementar] CHECK CONSTRAINT [cteServicoComplementar_FK]
 GO
+-----------------------------------------------------------------------
+-------------------------------cteInfNFe-------------------------------
+-----------------------------------------------------------------------
+CREATE TABLE [dbo].[cteInfNFe](
+	[CTEID] [int] NOT NULL,
+	[CHAVE] [varchar](50)NOT NULL,
+	[PIN] [varchar](50),
+	[DPREV] Datetime
+	
+) ON [PRIMARY]
+GO
 
+ALTER TABLE [dbo].[cteInfNFe]  WITH CHECK ADD  CONSTRAINT [cteInfNFe_FK] FOREIGN KEY([CTEID])
+REFERENCES [dbo].[cteIde] ([CTEID])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[cteInfNFe] CHECK CONSTRAINT [cteInfNFe_FK]
+GO
 
 
 

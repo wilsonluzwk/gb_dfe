@@ -49,20 +49,22 @@ type
 
   private
 
-    Procedure gravaRemetenteCte(octr: Integer; DANFE: TACBrCTe);
+    Procedure GravaRemetenteCte(octr: Integer; DANFE: TACBrCTe);
 
-    Procedure gravaDestinatarioCte(octr: Integer; DANFE: TACBrCTe);
+    Procedure GravaDestinatarioCte(octr: Integer; DANFE: TACBrCTe);
 
-    Procedure gravaEmitenteCte(octr: Integer; DANFE: TACBrCTe);
-    Procedure gravaExpedidorCte(octr: Integer; DANFE: TACBrCTe);
+    Procedure GravaEmitenteCte(octr: Integer; DANFE: TACBrCTe);
+    Procedure GravaExpedidorCte(octr: Integer; DANFE: TACBrCTe);
 
-    Procedure gravaRecebedorCte(octr: Integer; DANFE: TACBrCTe);
+    Procedure GravaRecebedorCte(octr: Integer; DANFE: TACBrCTe);
 
-    Procedure gravaComplementoCte(octr: Integer; DANFE: TACBrCTe);
+    Procedure GravaComplementoCte(octr: Integer; DANFE: TACBrCTe);
+
+    Procedure GravaCteInfNFe(octr: Integer; DANFE: TACBrCTe);
 
   strict private
   public
-    function gravaCte(DANFE: TACBrCTe): Boolean;
+    function GravaCte(DANFE: TACBrCTe): Boolean;
     function ListarCte(Param: Tjsonobject): TDtoCteIdeCollection;
   end;
 
@@ -129,7 +131,7 @@ begin
 end;
 
 { ----------------------------------------------------------------------------- }
-function formataCNPJ(const CNPJ: string): string;
+function FormataCNPJ(const CNPJ: string): string;
 begin
   Result := Copy(CNPJ, 01, 08);
   Result := Result + '/' + Copy(CNPJ, 09, 04);
@@ -137,7 +139,7 @@ begin
 end;
 
 { ----------------------------------------------------------------------------- }
-function soNumeros(const Value: string): string;
+function SoNumeros(const Value: string): string;
 var
   I: Integer;
 begin
@@ -151,7 +153,7 @@ begin
 end;
 
 { ----------------------------------------------------------------------------- }
-function soNumeros2(const Value: string): string;
+function SoNumeros2(const Value: string): string;
 var
   I: Integer;
 begin
@@ -173,7 +175,7 @@ var
   formatSettings: TFormatSettings;
 
 begin
-  Value := soNumeros2(Value);
+  Value := SoNumeros2(Value);
   GetLocaleFormatSettings(LOCALE_SYSTEM_DEFAULT, formatSettings);
   sep := formatSettings.DecimalSeparator;
   if sep = '' then
@@ -209,43 +211,9 @@ begin
   Result := Length(Trim(XMLNode)) > 0;
 end;
 
-function VersaoEXE(arquivo: string): string;
-type
-  PFFI = ^vs_FixedFileInfo;
-var
-  F: PFFI;
-  Handle: DWORD;
-  Len: Longint;
-  Data: pchar;
-  Buffer: Pointer;
-  Tamanho: DWORD;
-  Parquivo: pchar;
-begin
-  if arquivo = '' then
-    arquivo := ParamStr(0);
-  Parquivo := StrAlloc(Length(arquivo) + 1);
-  StrPcopy(Parquivo, arquivo);
-  Len := GetFileVersionInfoSize(Parquivo, Handle);
-  Result := '';
-  if Len > 0 then
-  begin
-    Data := StrAlloc(Len + 1);
-    if GetFileVersionInfo(Parquivo, Handle, Len, Data) then
-    begin
-      VerQueryValue(Data, '', Buffer, Tamanho);
-      F := PFFI(Buffer);
-      Result := Format('%d.%d.%d.%d', [HiWord(F^.dwFileVersionMs),
-        LoWord(F^.dwFileVersionMs), HiWord(F^.dwFileVersionLs),
-        LoWord(F^.dwFileVersionLs)]);
-    end;
-    StrDispose(Data);
-  end;
-  StrDispose(Parquivo);
-
-end;
 { ----------------------------------------------------------------------------- }
 
-function TDaoCte.gravaCte(DANFE: TACBrCTe): Boolean;
+function TDaoCte.GravaCte(DANFE: TACBrCTe): Boolean;
 var
 
   cdForn, XPed: Integer;
@@ -272,7 +240,7 @@ var
 
 begin
 
-  ochave := soNumeros(DANFE.Conhecimentos[0].Cte.InfCte.Id);
+  ochave := SoNumeros(DANFE.Conhecimentos[0].Cte.InfCte.Id);
   var
   rcdctr := 0;
   TRY
@@ -298,7 +266,7 @@ begin
       I := Query.RecordCount;
       if I > 0 then
         raise exception.Create('DANFE CTE JÁ IMPORTADO ->  ' +
-          soNumeros(DANFE.Conhecimentos[0].Cte.InfCte.Id));
+          SoNumeros(DANFE.Conhecimentos[0].Cte.InfCte.Id));
       try
         if FdconNFE.InTransaction then
           FdconNFE.Rollback;
@@ -524,7 +492,7 @@ begin
 
         /// ---------------------IMPOSTOS--------------------------------------------
         ParamByName('NR_AUTORIZADOR').Value :=
-          soNumeros(DANFE.Conhecimentos[0].Cte.procCTe.chCTe);
+          SoNumeros(DANFE.Conhecimentos[0].Cte.procCTe.chCTe);
         ParamByName('VTPREST').Value := DANFE.Conhecimentos[0]
           .Cte.VPrest.VTPrest;
         ParamByName('VREC').Value := DANFE.Conhecimentos[0].Cte.VPrest.VRec;
@@ -641,13 +609,13 @@ begin
         Query.Open;
         rcdctr := Query.Fields[0].AsInteger;
         Query.Close;
-        gravaRemetenteCte(rcdctr, DANFE);
-        gravaDestinatarioCte(rcdctr, DANFE);
-        gravaEmitenteCte(rcdctr, DANFE);
-        gravaExpedidorCte(rcdctr, DANFE);
-        gravaRecebedorCte(rcdctr, DANFE);
-        gravaComplementoCte(rcdctr, DANFE);
-
+        GravaRemetenteCte(rcdctr, DANFE);
+        GravaDestinatarioCte(rcdctr, DANFE);
+        GravaEmitenteCte(rcdctr, DANFE);
+        GravaExpedidorCte(rcdctr, DANFE);
+        GravaRecebedorCte(rcdctr, DANFE);
+        GravaComplementoCte(rcdctr, DANFE);
+        GravaCteInfNFe(rcdctr, DANFE);
         Result := True;
         FdconNFE.Commit;
         GravaLog('[CTE]Importado ' + ochave + ' - ' + ' Com sucesso',
@@ -667,13 +635,11 @@ begin
         ' NÃO IMPORTANDO TABELA cteIde  NÃO CRIADA', '');
     end;
   Finally
-
   end;
-
 end;
 
 { ----------------------------------------------------------------------------- }
-procedure TDaoCte.gravaRecebedorCte(octr: Integer; DANFE: TACBrCTe);
+procedure TDaoCte.GravaRecebedorCte(octr: Integer; DANFE: TACBrCTe);
 var
   Qry: TFDQuery;
 begin
@@ -767,10 +733,8 @@ begin
   finally
     FreeAndNil(Qry);
   end;
-
 end;
-
-Procedure TDaoCte.gravaRemetenteCte(octr: Integer; DANFE: TACBrCTe);
+Procedure TDaoCte.GravaRemetenteCte(octr: Integer; DANFE: TACBrCTe);
 var
   Qry: TFDQuery;
 begin
@@ -901,7 +865,7 @@ begin
 end;
 
 { ----------------------------------------------------------------------------- }
-Procedure TDaoCte.gravaDestinatarioCte(octr: Integer; DANFE: TACBrCTe);
+Procedure TDaoCte.GravaDestinatarioCte(octr: Integer; DANFE: TACBrCTe);
 var
   Qry: TFDQuery;
 begin
@@ -998,7 +962,7 @@ begin
 end;
 
 { ----------------------------------------------------------------------------- }
-Procedure TDaoCte.gravaEmitenteCte(octr: Integer; DANFE: TACBrCTe);
+Procedure TDaoCte.GravaEmitenteCte(octr: Integer; DANFE: TACBrCTe);
 var
   Qry: TFDQuery;
 
@@ -1086,7 +1050,7 @@ begin
 end;
 
 { ----------------------------------------------------------------------------- }
-Procedure TDaoCte.gravaExpedidorCte(octr: Integer; DANFE: TACBrCTe);
+Procedure TDaoCte.GravaExpedidorCte(octr: Integer; DANFE: TACBrCTe);
 var
   Qry: TFDQuery;
 begin
@@ -1183,7 +1147,7 @@ begin
 end;
 
 { ----------------------------------------------------------------------------- }
-Procedure TDaoCte.gravaComplementoCte(octr: Integer; DANFE: TACBrCTe);
+Procedure TDaoCte.GravaComplementoCte(octr: Integer; DANFE: TACBrCTe);
 var
   Qry: TFDQuery;
   I: Integer;
@@ -1226,6 +1190,67 @@ begin
       on e: exception do
         raise exception.Create
           ('      ->[1457 ]ERRO AO IMPORTAR COMPLEMENTOS DO CTE ' + e.message);
+    end;
+  finally
+    FreeAndNil(Qry);
+  end;
+
+end;
+
+{ ----------------------------------------------------------------------------- }
+Procedure TDaoCte.GravaCteInfNFe(octr: Integer; DANFE: TACBrCTe);
+var
+  Qry: TFDQuery;
+  I: Integer;
+begin
+  try
+    Qry := TFDQuery.Create(nil);
+    Qry.Connection := FdconNFE;
+    Query.SQL.Clear;
+    with Qry do
+    begin
+      SQL.add('INSERT INTO  cteInfNFe');
+      SQL.add(' (            ');
+      SQL.add('  CTEID,      ');
+      SQL.add('  CHAVE,      ');
+      SQL.add('  PIN,        ');
+      SQL.add('  DPREV       ');
+
+      SQL.add(' )            ');
+      SQL.add('VALUES        ');
+      SQL.add('   (          ');
+      SQL.add('    :CTEID,   ');
+      SQL.add('    :CHAVE,   ');
+      SQL.add('    :PIN,     ');
+      SQL.add('    :DPREV    ');
+
+      SQL.add(' ) ');
+      ParamByName('CTEID').DataType := ftInteger;
+      ParamByName('CHAVE').DataType := ftstring;
+      ParamByName('PIN').DataType := ftstring;
+      ParamByName('DPREV').DataType := ftDateTime;
+
+    end;
+    try
+      for I := 0 to DANFE.Conhecimentos[0].Cte.InfCTeNorm.infDoc.infNFe.
+        Count - 1 do
+      begin
+        Qry.ParamByName('CTEID').AsInteger := octr;
+        Qry.ParamByName('CHAVE').Asstring := DANFE.Conhecimentos[0]
+          .Cte.InfCTeNorm.infDoc.infNFe[I].chave;
+        Qry.ParamByName('PIN').Asstring := DANFE.Conhecimentos[0]
+          .Cte.InfCTeNorm.infDoc.infNFe[I].PIN;
+
+        Qry.ParamByName('DPREV').AsDateTime := DANFE.Conhecimentos[0]
+          .Cte.InfCTeNorm.infDoc.infNFe[I].dPrev;
+
+        Qry.ExecSQL;
+      end;
+    except
+      on e: exception do
+        raise exception.Create
+          ('      ->[1457 ]ERRO AO IMPORTAR IFORMACOES DE NFE DO CTE ' +
+          e.message);
     end;
   finally
     FreeAndNil(Qry);

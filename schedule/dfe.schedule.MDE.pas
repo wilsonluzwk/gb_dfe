@@ -170,25 +170,23 @@ begin
 
   end;
 end;
-
+{ -------------------------------------------------------------- }
 procedure TScheduleMDE.processarCte;
 var
   Lservices: TThreadCte;
 begin
   Lservices := TThreadCte.create;
   try
-
     Lservices.empresa := FEmpresa;
     Lservices.ConsultarCte;
   finally
     FreeAndNil(Lservices);
   end;
 end;
-
+{ -------------------------------------------------------------- }
 procedure TScheduleMDE.SetCnpjLoja;
 var
   FdaoEmpresa: TDaoEmpresa;
-
 begin
   try
     FdaoEmpresa := TDaoEmpresa.create;
@@ -199,7 +197,7 @@ begin
   end;
 end;
 
-{ ------------------------------------------------------------------------------ }
+{ -------------------------------------------------------------- }
 procedure TScheduleMDE.ProcessaCiencia();
 var
   Fciencia: TGbCienciaOperacaoClass;
@@ -222,9 +220,7 @@ begin
         gravalog('[CienciaAutomatica] 157 Loja ' + inttostr(FcodLoja) +
           ' ERRO  :' + e.Message, FcnpjLoja);
       end;
-
     end;
-
   end;
 end;
 
@@ -273,6 +269,12 @@ begin
                 Continue
               end;
               try
+                processarCte();
+              except
+                on e: exception do
+                  gravalog('[ScheduleMDE]proceso CTE  ' + e.Message, FcnpjLoja);
+              end;
+              try
                 ProcessaNsu;
               except
                 on e: exception do
@@ -292,10 +294,6 @@ begin
                   gravalog('[ScheduleMDE]processar importacao automatica  ' +
                     e.Message, FcnpjLoja);
               End;
-              try
-                processarCte();
-              except
-              end;
 
             except
               on e: exception do
