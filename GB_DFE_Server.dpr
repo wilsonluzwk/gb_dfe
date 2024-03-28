@@ -138,7 +138,7 @@ begin
     begin
       gravalog('[INCIANDO IMPORTAÇAO AUTOMATICA/MANIFESTOS ]', '');
       Writeln('[INCIANDO IMPORTAÇAO AUTOMATICA/MANIFESTOS ]', '');
-       resume;
+     // resume;
     end;
     TServerConfig.GetInstance;
     while not terminate do

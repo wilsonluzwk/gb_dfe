@@ -233,8 +233,11 @@ begin
       opesquisa := TfiltroNota.create;
       opesquisa.numero := Fnota.numero;
       FemailTransp := Nota.emailtransportadora;
+      //evitar que o fdp informe uma serie e mande outra no xml
+      Fnota.serie :=Facbr.NotasFiscais[0].nfe.Ide.serie;
       opesquisa.serie := inttostr(Fnota.serie);
       Fnota.modelo := inttostr(Facbr.NotasFiscais[0].nfe.Ide.modelo);
+
       opesquisa.cnpj := Fnota.cnpj;;
       opesquisa.ambiente := 'H';
       opesquisa.codigo_loja := '';

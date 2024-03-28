@@ -225,7 +225,7 @@ begin
       FcartaCorrecao := classcartaCorrecao;
 
       Fempresa := dao.getEmpresaCnpj(classcartaCorrecao.cnpj);
-
+      FcartaCorrecao.CodigoLoja :=Fempresa.codigo_loja;
       if Fempresa.cnpj = '' then
         raise exception.create
           ('Nehuma empresa  cadastrada com o cnpj informado ' +

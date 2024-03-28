@@ -72,7 +72,24 @@ type
 
 implementation
 
+uses
+  dfe.lib.util;
+
 { TNnfeController }
+function StrippedOfNonAscii(const s: string): string;
+var
+  i, Count: Integer;
+begin
+  SetLength(Result, Length(s));
+  Count := 0;
+  for i := 1 to Length(s) do begin
+    if ((s[i] >= #32) and (s[i] <= #127)) or (s[i] in [#10, #13]) then begin
+      inc(Count);
+      Result[Count] := s[i];
+    end;
+  end;
+  SetLength(Result, Count);
+end;
 { ----------------------------------------------------------------------------- }
 function TNnfeController.cancelarNfe(pjson: TJSONObject): string;
 var
@@ -90,7 +107,7 @@ var
     response.ambiente := request.ambiente;
     response.protocoloNota := request.protocolo;
     response.justificativa := request.justificativa;
-    response.xmlRetorno := TNetEncoding.base64.Encode(cancelamento.xmlRetorno);
+    response.xmlRetorno := TNetEncoding.base64.Encode(StrippedOfNonAscii( cancelamento.xmlRetorno));
     response.data := DateTimeToStr(request.data);
     response.cstat := cancelamento.cstat;
     response.xmotivo := cancelamento.xmotivo;
@@ -101,7 +118,7 @@ var
 
 begin
   try
-    request := tjson.JsonToObject<TCancelamentoRequest>(pjson.tostring);
+    request := tjson.JsonToObject<TCancelamentoRequest>(pjson.tostring, [joDateFormatUnix]);
     cancelamento := TCancelamento.create();
     cancelamento.Cnpj := request.Cnpj;
     cancelamento.emailDestinatario := request.emailDestinatario;
@@ -109,7 +126,7 @@ begin
     cancelamento.Serie := request.Serie;
     cancelamento.chave := request.chave;
     cancelamento.protocoloNota := request.protocolo;
-    cancelamento.data := DateTimeToStr(request.data);
+    cancelamento.data :=DateToStr( tutil.parseDateTime(tutil.GetJsonValue('data',pjson)));
     cancelamento.justificativa := request.justificativa;
     service := TServiceCancelar.create(cancelamento);
     setResponsebyNota();
@@ -137,7 +154,7 @@ var
     response.justificativa := request.justificativa;
     response.xmotivo := manifesto.xmotivo;
     response.cstat := manifesto.cstat;
-    response.xmlEvento := TNetEncoding.base64.Encode(manifesto.xmlEvento);
+    response.xmlEvento := TNetEncoding.base64.Encode(StrippedOfNonAscii(manifesto.xmlEvento));
     response.danfe := manifesto.danfe;
     response.cstat := manifesto.cstat;
     response.xmotivo := manifesto.xmotivo;
@@ -147,11 +164,11 @@ var
 
 begin
   try
-    request := tjson.JsonToObject<TmanifestoRequest>(pjson.tostring);
+    request := tjson.JsonToObject<TmanifestoRequest>(pjson.tostring, [joDateFormatUnix]);
     manifesto := Tmanifesto.create();
     manifesto.Cnpj := request.Cnpj;
     manifesto.chave := request.chave;
-    manifesto.dataHora := request.dataHora;
+    manifesto.dataHora := tutil.parseDateTime(tutil.GetJsonValue('dataHora',pjson));
     manifesto.sequencia := request.sequencia;
     manifesto.justificativa := request.justificativa;
     manifesto.tipo := request.tipo;
@@ -182,7 +199,7 @@ var
     response.justificativa := request.justificativa;
     response.xmotivo := manifesto.xmotivo;
     response.cstat := manifesto.cstat;
-    response.xmlEvento := TNetEncoding.base64.Encode(manifesto.xmlEvento);
+    response.xmlEvento := TNetEncoding.base64.Encode(StrippedOfNonAscii(manifesto.xmlEvento));
     response.danfe := manifesto.danfe;
     response.cstat := manifesto.cstat;
     response.xmotivo := manifesto.xmotivo;
@@ -192,11 +209,11 @@ var
 
 begin
   try
-    request := tjson.JsonToObject<TmanifestoRequest>(pjson.tostring);
+    request := tjson.JsonToObject<TmanifestoRequest>(pjson.tostring, [joDateFormatUnix]);
     manifesto := Tmanifesto.create();
     manifesto.Cnpj := request.Cnpj;
     manifesto.chave := request.chave;
-    manifesto.dataHora := request.dataHora;
+    manifesto.dataHora := tutil.parseDateTime(tutil.GetJsonValue('dataHora',pjson));
     manifesto.sequencia := request.sequencia;
     manifesto.justificativa := request.justificativa;
     manifesto.tipo := request.tipo;
@@ -238,7 +255,7 @@ var
     response.xcorrecao := request.xcorrecao;
     response.xmotivo := cartaCorrecao.xmotivo;
     response.cstat := cartaCorrecao.cstat;
-    response.xmlEvento := TNetEncoding.base64.Encode(cartaCorrecao.xmlEvento);
+    response.xmlEvento := TNetEncoding.base64.Encode(StrippedOfNonAscii(cartaCorrecao.xmlEvento));
     response.xmlRetorno := TNetEncoding.base64.Encode(cartaCorrecao.xmlEvento);
     response.danfe := cartaCorrecao.danfe;
     response.cstat := cartaCorrecao.cstat;
@@ -250,12 +267,12 @@ var
 begin
   try
 
-    request := tjson.JsonToObject<TcartaCorrecaoRequest>(pjson.tostring, []);
+    request := tjson.JsonToObject<TcartaCorrecaoRequest>(pjson.tostring,  [joDateFormatUnix]);
     cartaCorrecao := TcartaCorrecao.create();
     cartaCorrecao.Cnpj := request.Cnpj;
     cartaCorrecao.emailDestinatario := request.emailDestinatario;
     cartaCorrecao.chave := request.chave;
-    cartaCorrecao.dataHora := request.dataHora;
+    cartaCorrecao.dataHora := tutil.parseDateTime(tutil.GetJsonValue('dataHora',pjson));
     cartaCorrecao.sequencia := request.sequencia;
     cartaCorrecao.xcorrecao := request.xcorrecao;
 
@@ -426,7 +443,7 @@ var
     response.Serie := request.Serie;
     response.xmotivo := inutilizacao.xmotivo;
     response.justificativa := request.justificativa;
-    response.xmlEvento := TNetEncoding.base64.Encode(inutilizacao.xmlEvento);
+    response.xmlEvento := TNetEncoding.base64.Encode(StrippedOfNonAscii(inutilizacao.xmlEvento));
     response.ano := request.ano;
     response.cstat := inutilizacao.cstat;
     response.xmotivo := inutilizacao.xmotivo;
@@ -439,7 +456,7 @@ var
 
 begin
   try
-    request := tjson.JsonToObject<TinutilizacaoRequest>(pjson.tostring);
+    request := tjson.JsonToObject<TinutilizacaoRequest>(pjson.tostring, [joDateFormatUnix]);
     inutilizacao := Tinutilizacao.create();
     inutilizacao.Cnpj := request.Cnpj;
     inutilizacao.numeroInicial := request.numeroInicial;
@@ -575,15 +592,15 @@ var
   procedure setResponsebyNota();
   begin
 
-    response.danfeBase64 := servicevalidar.danfeBase64;
+    response.danfeBase64 :=StrippedOfNonAscii(servicevalidar.danfeBase64) ;
     response.Cnpj := nota.Cnpj;
     response.Numero := nota.Numero;
     response.Serie := nota.Serie;
     response.modelo := request.modelo;
     if nota.dataProcessamento > 0 then
     begin
-      response.xmlProcesado := TNetEncoding.base64.Encode(nota.Xml);
-      response.xmlRetorno := TNetEncoding.base64.Encode(nota.xmlRetorno);
+      response.xmlProcesado :=StringReplace(  TNetEncoding.base64.Encode(nota.Xml),'\r\n','',[rfReplaceAll,rfIgnoreCase]);
+      response.xmlRetorno := StringReplace( TNetEncoding.base64.Encode(nota.xmlRetorno),'\r\n','',[rfReplaceAll,rfIgnoreCase]);
 
     end;
     response.chave := nota.chave;
@@ -604,7 +621,7 @@ var
 
 begin
 
-  request := tjson.JsonToObject<TValidacaoRequest>(pjson.tostring);
+  request := tjson.JsonToObject<TValidacaoRequest>(pjson.tostring, [joDateFormatUnix]);
   response := TValidacaoResponse.create;
   nota := Tnota.create();
   try

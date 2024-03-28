@@ -12,6 +12,7 @@ Type
   private
     Fcnpj: string;
     Fchave: string;
+    FCodigoLoja: String;
     FdataHora: TDateTime;
     Fsequencia: integer;
     Fxcorrecao: string;
@@ -27,6 +28,7 @@ Type
   published
     property cnpj: string read Fcnpj write Fcnpj;
     property chave: string read Fchave write Fchave;
+    property CodigoLoja: string read FCodigoLoja write FCodigoLoja;
     property dataHora: TDateTime read FdataHora write FdataHora;
     property sequencia: integer read Fsequencia write Fsequencia;
     property xcorrecao: string read Fxcorrecao write Fxcorrecao;

@@ -22,13 +22,14 @@ uses
   DBClient,
   dfe.lib.constants,
 
-  classes;
+  classes, System.JSON;
 
 type
   Tutil = class
     class function From<T: class>(Source: T): T; static;
     class function parseDateTime(value: string): TDateTime;
     class function parseDate(value: string): TDate;
+    class function GetJsonValue(value: string; pjson: tJsonObject): string;
   end;
 
 function GetChaveValidada(value: string): string;
@@ -834,6 +835,22 @@ begin
     end;
   finally
     FreeAndNil(lst);
+  end;
+end;
+
+class function Tutil.GetJsonValue(value: string; pjson: tJsonObject): string;
+var
+  Lresult: string;
+  Ljson: tJsonObject;
+begin
+  Result := '';
+  try
+    Ljson := tJsonObject.ParseJSONValue(uppercase(pjson.ToString))
+      as tJsonObject;
+    if Ljson.TryGetValue(UpperCase( value), Lresult) then
+      Result := Lresult;
+  finally
+    FreeAndNil(Ljson);
   end;
 end;
 

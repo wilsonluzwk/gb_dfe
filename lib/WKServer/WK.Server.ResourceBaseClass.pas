@@ -631,14 +631,13 @@ begin
 end;
 
 function TResourceBaseClass.GetValueSequence(SequenceName: String): Integer;
-const
-  SQL = 'SELECT nextval(%s) seq';
+
 var
   Connection: TConnection;
 begin
   Connection := TConnection.Create;
   try
-    Connection.Query.SQL.Add(Format(SQL, [QuotedStr(SequenceName)]));
+    Connection.Query.SQL.Add('SELECT NEXT VALUE FOR '+SequenceName+'  AS seq');
     Connection.Query.Open;
     result := Connection.Query.FieldByName('seq').AsInteger;
   finally

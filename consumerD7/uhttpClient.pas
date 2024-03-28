@@ -67,8 +67,9 @@ begin
 
     Request.Host := Fhost;
     Request.CustomHeaders.Values['Content-Type'] := 'application/json';
-    Request.ContentType := 'application/json; charset=iso-8859-1';
+    Request.ContentType := 'application/json';
     Request.CustomHeaders.Values['User-Agent'] := 'DFEaPIConsumerD7';
+
   end;
 end;
 
@@ -109,7 +110,7 @@ procedure ThttpClient.execute;
 var
   srespose: string;
 
-  idmd5: TIdHashMessageDigest5;
+
   Req_Json: TStream;
   aurl: string;
   decoded: string;
@@ -129,7 +130,6 @@ var
   end;
 
 begin
-  idmd5 := TIdHashMessageDigest5.Create;
 
   try
     FFinalized := false;
@@ -190,7 +190,6 @@ begin
           FbeforeExecute(Nil);
       except
       end;
-      FreeAndNil(idmd5);
 
     except
     end;

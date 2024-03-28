@@ -5,7 +5,7 @@ uses
   utesteMain in 'utesteMain.pas' {fmain},
   consumerApi in 'consumerApi.pas',
   uhttpClient in 'uhttpClient.pas',
-  uLkJSON in 'uLkJSON.pas',
+
   geradorXml in 'geradorXml.pas';
 
 {$R *.res}

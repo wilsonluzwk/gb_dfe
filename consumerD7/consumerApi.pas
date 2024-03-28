@@ -6,6 +6,7 @@ uses
   Windows,
   Messages,
   SysUtils,
+  json,
   Variants,
   Classes,
   Graphics,
@@ -14,9 +15,10 @@ uses
   Dialogs,
   StdCtrls,
   Buttons,
+
   ExtCtrls,
   DB,
-  uLkJSON,
+
   UrlMon,
   IdHTTP,
   IdIOHandler,
@@ -29,18 +31,19 @@ type
   private
   { Private declarations }
    FnumeroNota:string;
+   FserieNota:string;
    FtipoNota:Integer;
    FcnpjEmitente:String;
-   function enviarRequisicao(jsonHeader:string):TlkJSONbase;
+   function enviarRequisicao(jsonHeader:string):TjsonObject;
   function setnota:string ;
   public
     { Public declarations }
-   function enviarNota(numeroNota:string):TlkJSONbase;
-   function cancelarNota(numero,serie,modelo,ano,just,prot,chave:string):TlkJSONbase;
-   function inutilizar(ninicial,nfinal,serie,just,modelo,ano:string):TlkJSONbase;
-   function manifesto(chave,just:string;tipo,sequencia:integer):TlkJSONbase;
-   function cartaCorrecao(chave,correcao,sequencia: string):TlkJSONbase;
-   function consultarNota(jsonHeader:string):TlkJSONbase;
+   function enviarNota(numeroNota,serieNota:string):TjsonObject;
+   function cancelarNota(numero,serie,modelo,ano,just,prot,chave:string):TjsonObject;
+   function inutilizar(ninicial,nfinal,serie,just,modelo,ano:string):TjsonObject;
+   function manifesto(chave,just:string;tipo,sequencia:integer):TjsonObject;
+   function cartaCorrecao(chave,correcao,sequencia: string):TjsonObject;
+   function consultarNota(jsonHeader:string):TjsonObject;
 
   published
      property tipoNota:integer read FtipoNota write FtipoNota;
@@ -57,28 +60,28 @@ uses
   geradorXml,
   uhttpClient
   ;
-function Tconsumer.cancelarNota(numero,serie,modelo,ano,just,prot,chave: string): TlkJSONbase;
+function Tconsumer.cancelarNota(numero,serie,modelo,ano,just,prot,chave: string): TjsonObject;
 var
- jso : TlkJSONobject;
+ jso : tjsonObject;
  i:Integer;
  srequest:string;
 begin
-  jso := TlkJSONobject.Create;
+  jso := tjsonObject.Create;
   try
-    jso.Add('cnpj', FcnpjEmitente);
-    jso.Add('operacao', 'cancelamento');
-    jso.Add('chave',chave);
-    jso.Add('numero',numero);
-    jso.Add('serie',serie);
-    jso.Add('protocolo',prot) ;
-    jso.Add('emailDestinatario' ,'wilson.rodrigues@wkconsultoria.com.br');
-    jso.Add('justificativa',just);
-    jso.Add('Data',FormatDateTime('YYYY-MM-DD ', Now));
-    jso.Add('modelo',modelo) ;
-    jso.Add('ano',ano);
+    jso.AddPair ('cnpj', FcnpjEmitente);
+    jso.AddPair('operacao', 'cancelamento');
+    jso.AddPair('chave',chave);
+    jso.AddPair('numero',numero);
+    jso.AddPair('serie',serie);
+    jso.AddPair('protocolo',prot) ;
+    jso.AddPair('emailDestinatario' ,'wilson.rodrigues@wkconsultoria.com.br');
+    jso.AddPair('justificativa',just);
+    jso.AddPair('Data',FormatDateTime('YYYY-MM-DD ', Now));
+    jso.AddPair('modelo',modelo) ;
+    jso.AddPair('ano',ano);
   finally
     i:=0;
-    srequest:=StringReplace(GenerateReadableText(jso, i),#13#10,'',[rfReplaceAll, rfIgnoreCase]);
+    srequest:=StringReplace(jso.tostring,#13#10,'',[rfReplaceAll, rfIgnoreCase]);
 
   end;
   FnumeroNota:=numero;
@@ -86,25 +89,25 @@ begin
 
 end;
 {------------------------------------------------------------------------------}
-function Tconsumer.cartaCorrecao(chave,correcao,sequencia: string): TlkJSONbase;
+function Tconsumer.cartaCorrecao(chave,correcao,sequencia: string): TjsonObject;
 var
- jso : TlkJSONobject;
+ jso : tjsonObject;
  i:Integer;
  srequest:string;
 begin
-  jso := TlkJSONobject.Create;
+  jso := tjsonObject.Create;
   try
-    jso.Add('cnpj', FcnpjEmitente);
-    jso.Add('operacao', 'cartacorrecao');
-    jso.Add('emailDestinatario' ,'wilson.rodrigues@wkconsultoria.com.br');
-    jso.Add('chave',chave);
-    jso.Add('xcorrecao',correcao) ;
-    jso.Add('dataHora',FormatDateTime('YYYY-MM-DD ', Now));
-    jso.Add('sequencia',sequencia) ;
+    jso.AddPair('cnpj', FcnpjEmitente);
+    jso.AddPair('operacao', 'cartacorrecao');
+    jso.AddPair('emailDestinatario' ,'wilson.rodrigues@wkconsultoria.com.br');
+    jso.AddPair('chave',chave);
+    jso.AddPair('xcorrecao',correcao) ;
+    jso.AddPair('dataHora',FormatDateTime('YYYY-MM-DD ', Now));
+    jso.AddPair('sequencia',sequencia) ;
 
   finally
     i:=0;
-    srequest:=StringReplace(GenerateReadableText(jso, i),#13#10,'',[rfReplaceAll, rfIgnoreCase]);
+    srequest:=StringReplace(jso.tostring,#13#10,'',[rfReplaceAll, rfIgnoreCase]);
 
   end;
 
@@ -113,18 +116,19 @@ begin
 
 end;
 {------------------------------------------------------------------------------}
-function Tconsumer.consultarNota(jsonHeader: string): TlkJSONbase;
+function Tconsumer.consultarNota(jsonHeader: string): TjsonObject;
 begin
   //***
 end;
 {------------------------------------------------------------------------------}
-function Tconsumer.enviarNota(numeroNota: string): TlkJSONbase;
+function Tconsumer.enviarNota(numeroNota,serieNota: string): TjsonObject;
 begin
   FnumeroNota:=numeroNota;
+  FserieNota:=serieNota;
   result:=enviarRequisicao( setnota);
 end;
 {------------------------------------------------------------------------------}
-function Tconsumer.enviarRequisicao(jsonHeader: string):TlkJSONbase;
+function Tconsumer.enviarRequisicao(jsonHeader: string):TjsonObject;
 var
   cli:ThttpClient;
  // Ssl:TIdSSLIOHandlerSocket ;
@@ -154,7 +158,7 @@ begin
     end ;
     cli.execute;
     try 
-      result := TlkJSON.ParseText(cli.response);
+      result := TJSonObject.ParseJSONValue(cli.response) as TJSONObject;
       with TStringList.create do
       begin
          text:= cli.response;
@@ -163,12 +167,12 @@ begin
       end;
       if not Assigned(result) then
       begin
-       result := TlkJSON.ParseText('{"error":"'+ cli.response+'"}');
+       result := TJSonObject.ParseJSONValue('{"error":"'+ cli.response+'"}') as TJSONObject;
 
       end;
    except
       on e:exception do
-         result := TlkJSON.ParseText('{"error":"'+ e.Message+'"}');
+         result := TJSonObject.ParseJSONValue('{"error":"'+ e.Message+'"}') as TJSONObject;
     end;
 
   finally
@@ -177,26 +181,26 @@ begin
   end;
 end;
 {------------------------------------------------------------------------------}
-function Tconsumer.inutilizar(ninicial,nfinal,serie,just,modelo,ano:string): TlkJSONbase;
+function Tconsumer.inutilizar(ninicial,nfinal,serie,just,modelo,ano:string): TjsonObject;
 var
- jso : TlkJSONobject;
+ jso : tjsonObject;
  i:Integer;
  srequest:string;
 begin
-  jso := TlkJSONobject.Create;
+  jso := tjsonObject.Create;
   try
-    jso.Add('cnpj', FcnpjEmitente);
-    jso.Add('operacao', 'inutilizacao');
-    jso.Add('numeroInicial',ninicial);
-    jso.Add('numeroFinal',nfinal);
-    jso.Add('serie',serie);
-    jso.Add('justificativa',just);
-    jso.Add('Data',FormatDateTime('YYYY-MM-DD', Now));
-    jso.Add('modelo',modelo) ;
-    jso.Add('ano',ano);
+    jso.AddPair('cnpj', FcnpjEmitente);
+    jso.AddPair('operacao', 'inutilizacao');
+    jso.AddPair('numeroInicial',ninicial);
+    jso.AddPair('numeroFinal',nfinal);
+    jso.AddPair('serie',serie);
+    jso.AddPair('justificativa',just);
+    jso.AddPair('Data',FormatDateTime('YYYY-MM-DD', Now));
+    jso.AddPair('modelo',modelo) ;
+    jso.AddPair('ano',ano);
   finally
     i:=0;
-    srequest:=StringReplace(GenerateReadableText(jso, i),#13#10,'',[rfReplaceAll, rfIgnoreCase]);
+    srequest:=StringReplace(jso.tostring,#13#10,'',[rfReplaceAll, rfIgnoreCase]);
 
   end;
   result:=enviarRequisicao(srequest);
@@ -204,31 +208,31 @@ begin
 end;
 {------------------------------------------------------------------------------}
 function Tconsumer.manifesto(chave, just: string;
-  tipo,sequencia: integer): TlkJSONbase;
+  tipo,sequencia: integer): TjsonObject;
 var
- jso : TlkJSONobject;
+ jso : tjsonObject;
  i:Integer;
  srequest:string;
 begin
-  jso := TlkJSONobject.Create;
+  jso := tjsonObject.Create;
   try
-    jso.Add('cnpj', FcnpjEmitente);
-    jso.Add('operacao', 'manifesto');
-    jso.Add('chave',chave);
-    jso.Add('justificativa',just) ;
+    jso.AddPair('cnpj', FcnpjEmitente);
+    jso.AddPair('operacao', 'manifesto');
+    jso.AddPair('chave',chave);
+    jso.AddPair('justificativa',just) ;
     //no delphi 7 nao  tem a funcao DateToISO8601
-    jso.Add('dataHora', FormatDateTime('YYYY-MM-dd' , Now)+'T'+FormatDateTime('hh:nn:ss' , Now));
-    jso.Add('tipo',tipo) ;
-    jso.Add('sequencia',sequencia) ;
+    jso.AddPair('dataHora', FormatDateTime('YYYY-MM-dd' , Now)+'T'+FormatDateTime('hh:nn:ss' , Now));
+    jso.AddPair('tipo',tipo) ;
+    jso.AddPair('sequencia',sequencia) ;
   finally
     i:=0;
-    srequest:=StringReplace(GenerateReadableText(jso, i),#13#10,'',[rfReplaceAll, rfIgnoreCase]);
+    srequest:=StringReplace(jso.tostring,#13#10,'',[rfReplaceAll, rfIgnoreCase]);
   end;
   result:=enviarRequisicao(srequest);
 end;  
 function Tconsumer.setnota(): string;
 var
- jso : TlkJSONobject;
+ jso : tjsonObject;
  i:Integer;
  FgeradorXml:TgeraXml;
  modelo:string;
@@ -236,28 +240,28 @@ var
 begin
   result:='';
   FgeradorXml:=TgeraXml.Create;
-  jso := TlkJSONobject.Create;
+  jso := tjsonObject.Create;
   If FtipoNota =55  then
   begin
-    FxmlNfe:=FgeradorXml.gerarXmlNFE(FnumeroNota) ;
+    FxmlNfe:=FgeradorXml.gerarXmlNFE(FnumeroNota,FserieNota) ;
   end Else
   begin
-    FxmlNfe:=FgeradorXml.gerarXmlNFCE(FnumeroNota) ;
+    FxmlNfe:=FgeradorXml.gerarXmlNFCE(FnumeroNota,FserieNota) ;
   end;
   try
-    jso.Add('cnpj', FcnpjEmitente);
+    jso.AddPair('cnpj', FcnpjEmitente);
     //e-mail transportadora
-    jso.Add('emailtransportadora', 'wilson.rodrigues@wkconsultoria.com.br');
-    jso.Add('operacao', 'validacao');
-    jso.Add('numero',FnumeroNota);
-    jso.Add('serie','1');
-    jso.Add('Xml',String(EncodeBase64(AnsiString(FxmlNfe))));
-    jso.Add('lote','1') ;
-    jso.Add('modelo',inttostr(FtipoNota));
+    jso.AddPair('emailtransportadora', 'wilson.rodrigues@wkconsultoria.com.br');
+    jso.AddPair('operacao', 'validacao');
+    jso.AddPair('numero',FnumeroNota);
+    jso.AddPair('serie','1');
+    jso.AddPair('Xml',String(EncodeBase64(AnsiString(FxmlNfe))));
+    jso.AddPair('lote','1') ;
+    jso.AddPair('modelo',inttostr(FtipoNota));
   finally
     i:=0;
 
-    result:=StringReplace(GenerateReadableText(jso, i),#13#10,'',[rfReplaceAll, rfIgnoreCase]);
+    result:=StringReplace(  jso.tostring,#13#10,'',[rfReplaceAll, rfIgnoreCase]);
 
   end;
 end;

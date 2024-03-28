@@ -1,14 +1,14 @@
 unit utesteMain;
-{-----------------------------------------------------------------------------
-          _ _                   _             _____  _____  _____  _____
-         (_) |                 | |           / __  \|  _  |/ __  \|____ |
-__      ___| |___  ___  _ __   | |_   _ ____ `' / /'| |/' |`' / /'    / /
-\ \ /\ / / | / __|/ _ \| '_ \  | | | | |_  /   / /  |  /| |  / /      \ \
- \ V  V /| | \__ \ (_) | | | | | | |_| |/ /  ./ /___\ |_/ /./ /___.___/ /
+{ -----------------------------------------------------------------------------
+  _ _                   _             _____  _____  _____  _____
+  (_) |                 | |           / __  \|  _  |/ __  \|____ |
+  __      ___| |___  ___  _ __   | |_   _ ____ `' / /'| |/' |`' / /'    / /
+  \ \ /\ / / | / __|/ _ \| '_ \  | | | | |_  /   / /  |  /| |  / /      \ \
+  \ V  V /| | \__ \ (_) | | | | | | |_| |/ /  ./ /___\ |_/ /./ /___.___/ /
   \_/\_/ |_|_|___/\___/|_| |_| |_|\__,_/___| \_____/ \___/ \_____/\____/
 
   ® wilson santa luz 2003
- ----------------------------------------------------------------------------}
+  ---------------------------------------------------------------------------- }
 
 interface
 
@@ -16,8 +16,10 @@ uses
   Windows,
   Messages,
   SysUtils,
+  System.NetEncoding,
   Variants,
   Classes,
+  json,
   Graphics,
   Controls,
   ShellApi,
@@ -27,9 +29,8 @@ uses
   ACBrBase,
   ACBrDFe,
   ACBrNFe,
-  uLkJSON,
-  ExtCtrls, Buttons
-  ;
+
+  ExtCtrls, Buttons;
 
 type
   Tfmain = class(TForm)
@@ -86,25 +87,32 @@ type
     edtJustManifesto: TEdit;
     Label15: TLabel;
     rtTiposManifesto: TRadioGroup;
+    edtCnpj: TEdit;
+    Label17: TLabel;
+    edtSerieNota: TEdit;
+    Label18: TLabel;
     procedure btEnviarNotaClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure btCancelarClick(Sender: TObject);
     procedure btInuClick(Sender: TObject);
     procedure btManifestoClick(Sender: TObject);
     procedure btnCartaCorrecaoClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure edtCnpjExit(Sender: TObject);
   private
     FnumeroNota: string;
     Fcnpj: string;
+    FSerieNota: string;
     FxmlNfe: string;
 
-
     procedure ImprimirDanfeRetornado(danfeBase64, name: string);
-    procedure setRespostaEnvioApi(json: TlkJSONbase);
+    procedure setRespostaEnvioApi(Fjson: TjsonObject);
     procedure gerarCancelamento;
     procedure gerarValidacao;
     procedure gerarInutilizacao;
     procedure gerarCartaCorrecao;
     procedure gerarManifesto;
+    function GetJsonValue(value: string; pjson: TjsonObject): string;
 
   public
     { Public declarations }
@@ -112,128 +120,192 @@ type
 
 var
   fmain: Tfmain;
- const _cnpj ='13100071000108';
- const _ie ='153257717';
+  _cnpj: string;
+
+const
+  _ie = '153257717';
+
 implementation
+
 uses
   synacode,
   consumerApi;
 {$R *.dfm}
-{------------------------------------------------------------------------------}
+
+{ ------------------------------------------------------------------------------ }
+function RemoveSpecialChars(const str: string): string;
+const
+  InvalidChars: set of char = [',', '.', '/', '!', '@', '#', '$', '%', '^', '&',
+    '*', '''', '"', ';', '_', '(', ')', ':', '|', '[', ']'];
+var
+  i, Count: Integer;
+begin
+  SetLength(Result, Length(str));
+  Count := 0;
+  for i := 1 to Length(str) do
+    if not(str[i] in InvalidChars) then
+    begin
+      inc(Count);
+      Result[Count] := str[i];
+    end;
+  SetLength(Result, Count);
+end;
+
+function StrippedOfNonAscii(const s: string): string;
+var
+  i, Count: Integer;
+begin
+  SetLength(Result, Length(s));
+  Count := 0;
+  for i := 1 to Length(s) do
+  begin
+    if ((s[i] >= #32) and (s[i] <= #127)) or (s[i] in [#10, #13]) then
+    begin
+      inc(Count);
+      Result[Count] := s[i];
+    end;
+  end;
+  SetLength(Result, Count);
+end;
+
+Procedure DecodeFile(const base64: String; const FileName: string);
+var
+  stream: TBytesStream;
+begin
+  stream := TBytesStream.Create(TNetEncoding.base64.DecodeStringToBytes
+    (base64));
+  try
+    stream.SaveToFile(FileName);
+  finally
+    stream.Free;
+  end;
+end;
 
 procedure Tfmain.ImprimirDanfeRetornado(danfeBase64, name: string);
 var
-  outfile: TFileStream;
-  sfile: string;
-  strDecoded: string;
+  stream: TBytesStream;
+  FileName: string;
 begin
+  FileName := ExtractFilePath(GetModuleName(HInstance)) + name;
   if danfeBase64 <> '' then
   begin
-    sfile := ExtractFilePath(GetModuleName(HInstance)) + name;
-    strDecoded := DecodeBase64(danfeBase64);
-    outfile := TFileStream.Create(sfile, fmCreate or fmOpenRead);
+    stream := TBytesStream.Create(TNetEncoding.base64.DecodeStringToBytes
+      (danfeBase64));
     try
-      outfile.WriteBuffer(Pointer(strDecoded)^, Length(strDecoded));
-      FreeAndNil(outfile);
-      ShellExecute(Handle, nil, PChar(sfile), nil, nil, SW_SHOWNORMAL);
+      stream.SaveToFile(FileName);
+
     finally
-      FreeAndNil(outfile);
+      stream.Free;
     end;
+    ShellExecute(Handle, nil, PChar(FileName), nil, nil, SW_SHOWNORMAL);
   end;
+
 end;
-{------------------------------------------------------------------------------}
+{ ------------------------------------------------------------------------------ }
 
 procedure Tfmain.btEnviarNotaClick(Sender: TObject);
 begin
   gerarValidacao();
 end;
-{------------------------------------------------------------------------------}
+{ ------------------------------------------------------------------------------ }
 
 procedure Tfmain.Button1Click(Sender: TObject);
 begin
   self.Close;
 end;
-{------------------------------------------------------------------------------}
 
-procedure Tfmain.setRespostaEnvioApi(json: TlkJSONbase);
+procedure Tfmain.edtCnpjExit(Sender: TObject);
+begin
+  _cnpj := edtCnpj.Text;
+end;
+
+procedure Tfmain.FormShow(Sender: TObject);
+begin
+  _cnpj := edtCnpj.Text;
+end;
+
+{ ------------------------------------------------------------------------------ }
+function Tfmain.GetJsonValue(value: string; pjson: TjsonObject): string;
+var
+  Lresult: string;
+  Ljson: TjsonObject;
+begin
+  Result := '';
+  try
+    Ljson := TjsonObject.ParseJSONValue(uppercase(pjson.ToString))
+      as TjsonObject;
+    if Ljson.TryGetValue(uppercase(value), Lresult) then
+      Result := Lresult;
+  finally
+    FreeAndNil(Ljson);
+  end;
+end;
+
+procedure Tfmain.setRespostaEnvioApi(Fjson: TjsonObject);
 var
   xmlRetorno: string;
   xmlEvento: string;
+  ldanfe: string;
+  xmlProcessado: string;
+  lvalue: string;
+  s: string;
 begin
-  if assigned(json) then
+  if assigned(Fjson) then
   begin
     memoLog.Lines.clear;
     memoLog.Lines.Add('------- Resposta recebida do servidor API -------');
-    if (assigned(json.Field['error']) and (json.Field['error'].value <> '')) then
-      memoLog.Lines.add('Erro -----------: ' + json.Field['error'].value);
+    Fjson.TryGetValue('cnpj', lvalue);
+    memoLog.Lines.Add('Cnpj -----------: ' + lvalue);
+    memoLog.Lines.Add('Erro -----------: ' + GetJsonValue('error', Fjson));
+    Fjson.TryGetValue('xmotivo', lvalue);
 
-    if assigned(json.Field['xmotivo']) then
-      memoLog.Lines.add('xmotivo -----------: ' + json.Field['xmotivo'].value);
-
-    if assigned(json.Field['cstat']) then
-      memoLog.Lines.add('cstat -------------: ' + json.Field['cstat'].value);
-
-
-    if (assigned(json.Field['digito']) and (json.Field['digito'].value <> '')) then
-      memoLog.Lines.add('digito ------------: ' + json.Field['digito'].value);
-
-    if (assigned(json.Field['protocolo']) and (json.Field['protocolo'].value <> '')) then
-    begin
-      memoLog.Lines.add('protocolo ---------: ' + json.Field['protocolo'].value);
-      edtProtocoloCancelamento.Text := json.Field['protocolo'].value;
-      if assigned(json.Field['chave']) then
-        edtChave.Text := json.Field['chave'].value;
-
+    memoLog.Lines.Add('xmotivo -----------: ' + lvalue);
+    try
+      Fjson.TryGetValue('cstat', lvalue);
+      memoLog.Lines.Add('cstat -------------: ' + lvalue);
+      s := Fjson.ToString;
+    except
+      s := Fjson.ToString;
+      s := '';
     end;
-    if (assigned(json.Field['chave']) and (json.Field['chave'].value <> '')) then
-    begin
-      memoLog.Lines.add('chave ---------: ' + json.Field['chave'].value);
-      edtChave.Text := json.Field['chave'].value;
-    end;
+    Fjson.TryGetValue('digito', lvalue);
+    memoLog.Lines.Add('digito ------------: ' + lvalue);
+    Fjson.TryGetValue('protocolo', lvalue);
+    memoLog.Lines.Add('protocolo ---------: ' + lvalue);
+    edtProtocoloCancelamento.Text := lvalue;
+    Fjson.TryGetValue('chave', lvalue);
 
-    if (assigned(json.Field['digito']) and (json.Field['digito'].value <> '')) then
-      memoLog.Lines.add('digito ------------: ' + json.Field['digito'].value);
+    edtChave.Text := lvalue;
+    memoLog.Lines.Add('chave ---------: ' + lvalue);
+    Fjson.TryGetValue('digito', lvalue);
+    memoLog.Lines.Add('digito ------------: ' + lvalue);
 
-    if (assigned(json.Field['danfeBase64']) and (json.Field['danfeBase64'].value <> '')) then
-    begin
-      ImprimirDanfeRetornado(json.Field['danfeBase64'].value, 'danfeNota' + FnumeroNota + '.pdf');
-    end;
+    Fjson.TryGetValue('xmlRetorno', xmlRetorno);
+    xmlRetorno := DecodeBase64(xmlRetorno);
+    memoLog.Lines.Add('xmlRetorno ------: ' + xmlRetorno);
+    ldanfe := '';
+    Fjson.TryGetValue('danfeBase64', ldanfe);
+    if ldanfe <> '' then
 
-    if (assigned(json.Field['xmlRetorno']) and (json.Field['xmlRetorno'].value <> '')) then
-    begin
-      xmlRetorno := DecodeBase64(json.Field['xmlRetorno'].value);
-      memoLog.Lines.add('xmlRetorno ------: ' + xmlRetorno);
-    end;
+      ImprimirDanfeRetornado(ldanfe, 'danfeNota' + FnumeroNota + '.pdf');
 
-    if (assigned(json.Field['xmlEvento']) and (json.Field['xmlEvento'].value <> '')) then
-    begin
-      xmlEvento := DecodeBase64(json.Field['xmlEvento'].value);
-      memoLog.Lines.add('xmlEvento ------: ' + xmlEvento);
-    end;
-
-    if (assigned(json.Field['xmlProcesado']) and (json.Field['xmlProcesado'].value <> '')) then
-    begin
-
-      memoLog.Lines.add('xmlNota---------: ' + DecodeBase64(json.Field['xmlProcesado'].value))
-    end;
   end;
 end;
-{-----------------------------------------------------------------------------}
 
 procedure Tfmain.btCancelarClick(Sender: TObject);
 begin
   gerarCancelamento();
 end;
-{-----------------------------------------------------------------------------}
+{ ----------------------------------------------------------------------------- }
 
 procedure Tfmain.gerarCancelamento;
 var
   api: Tconsumer;
-  jresponse: TlkJSONbase;
+  jresponse: TjsonObject;
 begin
-  memoLog.Lines.Clear;
+  memoLog.Lines.clear;
   memoLog.Lines.Add('Aguarde enviando canelamento....');
-  FnumeroNota := edtNumeroNota.text;
+  FnumeroNota := edtNumeroNota.Text;
   api := Tconsumer.Create;
   try
     if rdTipoNota.ItemIndex = 1 then
@@ -242,40 +314,37 @@ begin
       api.tipoNota := 65;
     api.cnpjEmitente := _cnpj;
     jresponse := api.cancelarNota(edtNotaCancelemento.Text,
-      edtSerieCancelamento.text,
-      edtModeloCancelamento.text,
-      edtAnoCancelamento.text,
-      edtJustificativaCancelamento.Text,
-      edtProtocoloCancelamento.Text,
-      edtChave.Text
-      );
+      edtSerieCancelamento.Text, edtModeloCancelamento.Text,
+      edtAnoCancelamento.Text, edtJustificativaCancelamento.Text,
+      edtProtocoloCancelamento.Text, edtChave.Text);
     setRespostaEnvioApi(jresponse);
   finally
     FreeAndNil(api);
   end;
 
 end;
-{-----------------------------------------------------------------------------}
+{ ----------------------------------------------------------------------------- }
 
 procedure Tfmain.gerarValidacao;
 var
   api: Tconsumer;
-  jresponse: TlkJSONbase;
+  jresponse: TjsonObject;
 begin
-  //INVOCAR A APICONSUMER QUE FARA A COMUNICAÇÃO COM A API
-  memoLog.Lines.Clear;
+  // INVOCAR A APICONSUMER QUE FARA A COMUNICAÇÃO COM A API
+  memoLog.Lines.clear;
   memoLog.Lines.Add('Aguarde enviando nota para validação....');
-  FnumeroNota := edtNumeroNota.text;
+  FnumeroNota := edtNumeroNota.Text;
+  FSerieNota := edtSerieNota.Text;
   api := Tconsumer.Create;
   try
     if rdTipoNota.ItemIndex = 1 then
       api.tipoNota := 55
     else
       api.tipoNota := 65;
-        //FIXO PARA TESTES
+    // FIXO PARA TESTES
     api.cnpjEmitente := _cnpj;
 
-    jresponse := api.enviarNota(FnumeroNota);
+    jresponse := api.enviarNota(FnumeroNota, edtSerieNota.Text);
     setRespostaEnvioApi(jresponse);
   finally
     FreeAndNil(api);
@@ -286,16 +355,16 @@ procedure Tfmain.btInuClick(Sender: TObject);
 begin
   gerarInutilizacao();
 end;
-{-----------------------------------------------------------------------------}
+{ ----------------------------------------------------------------------------- }
 
 procedure Tfmain.gerarCartaCorrecao;
 var
   api: Tconsumer;
-  jresponse: TlkJSONbase;
+  jresponse: TjsonObject;
 begin
-  memoLog.Lines.Clear;
+  memoLog.Lines.clear;
   memoLog.Lines.Add('Aguarde enviando carta de correçao....');
-  FnumeroNota := edtNumeroNota.text;
+  FnumeroNota := edtNumeroNota.Text;
   api := Tconsumer.Create;
   try
     if rdTipoNota.ItemIndex = 1 then
@@ -303,39 +372,34 @@ begin
     else
       api.tipoNota := 65;
     api.cnpjEmitente := _cnpj;
-    jresponse := api.cartaCorrecao(edtChaveCarta.Text, edtcorecao.text, '1');
+    jresponse := api.cartaCorrecao(edtChaveCarta.Text, edtcorecao.Text, '1');
     setRespostaEnvioApi(jresponse);
   finally
     FreeAndNil(api);
   end;
 
 end;
-{-----------------------------------------------------------------------------}
+{ ----------------------------------------------------------------------------- }
 
 procedure Tfmain.gerarInutilizacao;
 var
   api: Tconsumer;
-  jresponse: TlkJSONbase;
+  jresponse: TjsonObject;
 begin
-  memoLog.Lines.Clear;
+  memoLog.Lines.clear;
   memoLog.Lines.Add('Aguarde enviando inutilizacao....');
-  FnumeroNota := edtNumeroNota.text;
+  FnumeroNota := edtNumeroNota.Text;
   api := Tconsumer.Create;
   try
     api.cnpjEmitente := _cnpj;
-    jresponse := api.inutilizar(edtINiInut.Text,
-      edtFinalInut.text,
-      edtSerieInut.text,
-      edtJustInut.text,
-      edtModeloInut.text,
-      edtAnoInut.Text
-      );
+    jresponse := api.inutilizar(edtINiInut.Text, edtFinalInut.Text,
+      edtSerieInut.Text, edtJustInut.Text, edtModeloInut.Text, edtAnoInut.Text);
     setRespostaEnvioApi(jresponse);
   finally
     FreeAndNil(api);
   end;
 end;
-{-----------------------------------------------------------------------------}
+{ ----------------------------------------------------------------------------- }
 
 procedure Tfmain.btManifestoClick(Sender: TObject);
 begin
@@ -345,11 +409,11 @@ end;
 procedure Tfmain.gerarManifesto;
 var
   api: Tconsumer;
-  jresponse: TlkJSONbase;
+  jresponse: TjsonObject;
 begin
-  memoLog.Lines.Clear;
+  memoLog.Lines.clear;
   memoLog.Lines.Add('Aguarde enviando manifesto....');
-  FnumeroNota := edtNumeroNota.text;
+  FnumeroNota := edtNumeroNota.Text;
   api := Tconsumer.Create;
   try
     if rdTipoNota.ItemIndex = 1 then
@@ -357,19 +421,19 @@ begin
     else
       api.tipoNota := 65;
     api.cnpjEmitente := _cnpj;
-    jresponse := api.manifesto(edtChaveManifesto.Text, edtJustManifesto.text, rtTiposManifesto.itemIndex, 1);
+    jresponse := api.manifesto(edtChaveManifesto.Text, edtJustManifesto.Text,
+      rtTiposManifesto.ItemIndex, 1);
     setRespostaEnvioApi(jresponse);
   finally
     FreeAndNil(api);
   end;
 end;
-{-----------------------------------------------------------------------------}
+{ ----------------------------------------------------------------------------- }
 
 procedure Tfmain.btnCartaCorrecaoClick(Sender: TObject);
 begin
   gerarCartaCorrecao;
 end;
-{-----------------------------------------------------------------------------}
+{ ----------------------------------------------------------------------------- }
 
 end.
-

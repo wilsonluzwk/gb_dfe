@@ -1,36 +1,36 @@
 object fmain: Tfmain
   Left = 512
   Top = 157
-  Width = 870
-  Height = 726
   Caption = 'Testador api delphi 7'
+  ClientHeight = 688
+  ClientWidth = 858
   Color = clWhite
   Font.Charset = ANSI_CHARSET
   Font.Color = clGray
   Font.Height = -11
   Font.Name = 'MS Reference Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
-  PixelsPerInch = 96
-  TextHeight = 15
+  OnShow = FormShow
+  TextHeight = 14
   object GroupBox2: TGroupBox
     Left = 0
     Top = 433
-    Width = 854
-    Height = 205
+    Width = 858
+    Height = 206
     Align = alClient
     Caption = 'Log'
     Ctl3D = False
     ParentCtl3D = False
     TabOrder = 0
+    ExplicitWidth = 854
+    ExplicitHeight = 205
     object memoLog: TMemo
       Left = 1
-      Top = 16
-      Width = 852
-      Height = 188
+      Top = 15
+      Width = 856
+      Height = 190
       Align = alClient
       BorderStyle = bsNone
-      Color = 16119285
       Ctl3D = True
       Font.Charset = ANSI_CHARSET
       Font.Color = clTeal
@@ -42,16 +42,20 @@ object fmain: Tfmain
       ScrollBars = ssVertical
       TabOrder = 0
       WordWrap = False
+      ExplicitWidth = 852
+      ExplicitHeight = 189
     end
   end
   object Panel1: TPanel
     Left = 0
-    Top = 638
-    Width = 854
+    Top = 639
+    Width = 858
     Height = 49
     Align = alBottom
     Color = clWhite
     TabOrder = 1
+    ExplicitTop = 638
+    ExplicitWidth = 854
     object Button1: TSpeedButton
       Left = 384
       Top = 8
@@ -141,13 +145,14 @@ object fmain: Tfmain
   object GroupBox1: TGroupBox
     Left = 0
     Top = 0
-    Width = 854
+    Width = 858
     Height = 433
     Align = alTop
     Caption = 'Opera'#231#245'es'
     TabOrder = 2
+    ExplicitWidth = 854
     object GroupBox3: TGroupBox
-      Left = 17
+      Left = 24
       Top = 16
       Width = 816
       Height = 59
@@ -158,13 +163,13 @@ object fmain: Tfmain
       object edtNota: TLabel
         Left = 6
         Top = 15
-        Width = 44
-        Height = 15
+        Width = 37
+        Height = 14
         Caption = 'N'#186' Nota'
       end
       object btEnviarNota: TSpeedButton
-        Left = 663
-        Top = 26
+        Left = 667
+        Top = 31
         Width = 146
         Height = 25
         Caption = 'Emitir nota         '
@@ -213,11 +218,26 @@ object fmain: Tfmain
         ParentFont = False
         OnClick = btEnviarNotaClick
       end
+      object Label17: TLabel
+        Left = 451
+        Top = 29
+        Width = 21
+        Height = 14
+        Caption = 'Cnpj'
+      end
+      object Label18: TLabel
+        Left = 81
+        Top = 16
+        Width = 50
+        Height = 14
+        Caption = 'Serie Nota'
+      end
       object edtNumeroNota: TEdit
-        Left = 8
-        Top = 31
+        Left = 3
+        Top = 35
         Width = 59
         Height = 21
+        Alignment = taRightJustify
         BevelInner = bvNone
         BevelOuter = bvNone
         BorderStyle = bsNone
@@ -234,8 +254,8 @@ object fmain: Tfmain
         Text = '1'
       end
       object rdTipoNota: TRadioGroup
-        Left = 88
-        Top = 16
+        Left = 262
+        Top = 18
         Width = 185
         Height = 38
         Columns = 2
@@ -244,6 +264,49 @@ object fmain: Tfmain
           'NFCE'
           'NFE')
         TabOrder = 0
+      end
+      object edtCnpj: TEdit
+        Left = 496
+        Top = 27
+        Width = 113
+        Height = 21
+        Alignment = taRightJustify
+        BevelInner = bvNone
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        Color = 16382457
+        Ctl3D = False
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clTeal
+        Font.Height = -11
+        Font.Name = 'MS Reference Sans Serif'
+        Font.Style = []
+        ParentCtl3D = False
+        ParentFont = False
+        TabOrder = 2
+        Text = '04338339000234'
+        OnExit = edtCnpjExit
+      end
+      object edtSerieNota: TEdit
+        Left = 81
+        Top = 36
+        Width = 59
+        Height = 21
+        Alignment = taRightJustify
+        BevelInner = bvNone
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        Color = 16382457
+        Ctl3D = False
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clTeal
+        Font.Height = -11
+        Font.Name = 'MS Reference Sans Serif'
+        Font.Style = []
+        ParentCtl3D = False
+        ParentFont = False
+        TabOrder = 3
+        Text = '1'
       end
     end
     object GroupBox4: TGroupBox
@@ -258,43 +321,43 @@ object fmain: Tfmain
       object Label1: TLabel
         Left = 11
         Top = 18
-        Width = 52
-        Height = 15
+        Width = 41
+        Height = 14
         Caption = 'N'#186' Inicial'
       end
       object Label2: TLabel
         Left = 75
         Top = 16
-        Width = 44
-        Height = 15
+        Width = 37
+        Height = 14
         Caption = 'N'#186' Final'
       end
       object Label9: TLabel
         Left = 203
         Top = 16
-        Width = 40
-        Height = 15
+        Width = 34
+        Height = 14
         Caption = 'Modelo'
       end
       object Label10: TLabel
         Left = 139
         Top = 16
-        Width = 30
-        Height = 15
+        Width = 25
+        Height = 14
         Caption = 'Serie'
       end
       object Label11: TLabel
         Left = 267
         Top = 16
-        Width = 22
-        Height = 15
+        Width = 20
+        Height = 14
         Caption = 'Ano'
       end
       object Label12: TLabel
         Left = 331
         Top = 15
-        Width = 66
-        Height = 15
+        Width = 57
+        Height = 14
         Caption = 'Justificativa'
       end
       object btInu: TSpeedButton
@@ -472,50 +535,50 @@ object fmain: Tfmain
       object Label3: TLabel
         Left = 11
         Top = 18
-        Width = 44
-        Height = 15
+        Width = 37
+        Height = 14
         Caption = 'N'#186' Nota'
       end
       object Label4: TLabel
         Left = 75
         Top = 16
-        Width = 30
-        Height = 15
+        Width = 25
+        Height = 14
         Caption = 'Serie'
       end
       object Label5: TLabel
         Left = 139
         Top = 16
-        Width = 40
-        Height = 15
+        Width = 34
+        Height = 14
         Caption = 'Modelo'
       end
       object Label6: TLabel
         Left = 203
         Top = 16
-        Width = 22
-        Height = 15
+        Width = 20
+        Height = 14
         Caption = 'Ano'
       end
       object Label7: TLabel
         Left = 499
         Top = 16
-        Width = 53
-        Height = 15
+        Width = 45
+        Height = 14
         Caption = 'Protocolo'
       end
       object Label8: TLabel
         Left = 267
         Top = 15
-        Width = 66
-        Height = 15
+        Width = 57
+        Height = 14
         Caption = 'Justificativa'
       end
       object Label13: TLabel
         Left = 11
         Top = 58
-        Width = 37
-        Height = 15
+        Width = 31
+        Height = 14
         Caption = 'Chave'
       end
       object btCancelar: TSpeedButton
@@ -713,15 +776,15 @@ object fmain: Tfmain
       object Label19: TLabel
         Left = 384
         Top = 17
-        Width = 53
-        Height = 15
+        Width = 45
+        Height = 14
         Caption = 'Corre'#231#227'o'
       end
       object Label14: TLabel
         Left = 11
         Top = 17
-        Width = 37
-        Height = 15
+        Width = 31
+        Height = 14
         Caption = 'Chave'
       end
       object btnCartaCorrecao: TSpeedButton
@@ -819,15 +882,15 @@ object fmain: Tfmain
       object Label16: TLabel
         Left = 275
         Top = 17
-        Width = 37
-        Height = 15
+        Width = 31
+        Height = 14
         Caption = 'Chave'
       end
       object Label15: TLabel
         Left = 275
         Top = 58
-        Width = 66
-        Height = 15
+        Width = 57
+        Height = 14
         Caption = 'Justificativa'
       end
       object btManifesto: TSpeedButton
