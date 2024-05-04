@@ -70,7 +70,7 @@ begin
     FAcbrCte := TACBrCTe.Create(nil);
     if HoursBetween(now.NowUTC,LEmpresa.NSU_DATA_CONSULTA_CTE) < 1 then
     begin
-      GravaLog('[CTE]  Consulta ja realizada nesta hora', LEmpresa.cnpj);
+
       exit;
     end;
 
@@ -115,7 +115,8 @@ begin
           GravaLog('[CTE] Motivo....: ' + xMotivo, LEmpresa.cnpj);
           GravaLog('[CTE] Último NSU: ' + ultNSU, LEmpresa.cnpj);
           GravaLog('[CTE] Máximo NSU: ' + maxNSU, LEmpresa.cnpj);
-
+          if (cStat <> 137 ) and (cStat = 137) then
+          
           for LIndex := 0 to docZip.Count - 1 do
           begin
             LdocZip := docZip[LIndex];

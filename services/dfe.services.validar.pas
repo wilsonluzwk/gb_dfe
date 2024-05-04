@@ -19,6 +19,11 @@ uses
   XSBuiltIns,
   Variants,
   activex,
+
+  XMLIntf,
+  syncobjs,
+
+  XMLDoc,
   ACBrNFe,
   pcnConversao,
   pcnConversaoNFe,
@@ -27,10 +32,6 @@ uses
   pcnNFeRTXT,
   pcnAuxiliar,
   ACBrDFeUtil,
-  XMLIntf,
-  syncobjs,
-
-  XMLDoc,
   ACBrDFeReport,
   ACBrMail,
   ACBrNFeNotasFiscais,
@@ -643,9 +644,9 @@ function TNfeValidar.validarTipoContigencia(uf: Integer): TpcnTipoEmissao;
 begin
   if uf > 60 then
     raise exception.create('Código uf invalida');
-  if uf in [12, 27, 16, 52, 32, 31, 25, 33, 24, 11, 14, 43, 42, 28, 35, 17] then
+  if uf in [12,15, 27, 16, 52, 32, 31, 25, 33, 24, 11, 14, 43, 42, 28, 35, 17] then
     result := teSVCAN
-  else if uf in [13, 23, 52, 29, 21, 50, 51, 15, 26, 22, 41] then
+  else if uf in [13, 23, 52, 29, 21, 50, 51, 26, 22, 41] then
     result := teSVCRS;
 
 end;
@@ -1003,6 +1004,19 @@ begin
         exit;
       end;
     end;
+     // SE A $#@@#$ DA SEFAZ RS ESTIVER FORA DO AR
+    if Tentativas > 5 then
+    begin
+      gravalog(getServiceID +
+        ' <<ATENÇAO ENVIANDO EM CONTIGENCIA SVCAN APOS 5 TENTATIVAS >>Nº: ' +
+        inttostr(Fnota.numero) + ' Serie: ' + inttostr(Fnota.serie) + ' Cnpj ' +
+        Fnota.cnpj + ' Tentativa: ' + inttostr(Tentativas), Fnota.cnpj);
+      if Fnota.modelo = '55' then
+      begin
+        setTpEmiss(teSVCAN);
+      end ;
+    end;
+
     // APOS SEXTA TENTATIVA TENTA ENVIAR FSDA OU OFFLINE PARA NFCE
     if Tentativas > 6 then
     begin

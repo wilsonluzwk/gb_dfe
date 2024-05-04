@@ -9,6 +9,21 @@ uses
   {$ENDIF MSWINDOWS}
   windows,
   System.SysUtils,
+  ACBrNFe,
+  pcnConversao,
+  pcnConversaoNFe,
+  ACBrUtil,
+  pcnNFeW,
+  pcnNFeRTXT,
+  pcnAuxiliar,
+  ACBrDFeUtil,
+  ACBrDFeReport,
+  ACBrMail,
+  ACBrNFeNotasFiscais,
+  ACBrDFeDANFeReport,
+  ACBrDANFCeFortesFr,
+  ACBrNFeDANFEClass,
+  ACBrNFeDANFeRLClass,
   classes,
   dfe.servicewin32.srv in 'win32service\dfe.servicewin32.srv.pas' {nfeserver: TService},
   dfe.httphandler.dashboard in 'httphandlers\dfe.httphandler.dashboard.pas',
@@ -128,6 +143,7 @@ var
 
 begin
   try
+    UFparaCodigo('PA')  ;
     terminate := false;
     Writeln(' GB_DFE Server 2022   ®                        ');
     Writeln(' Runing on port:  ' + inttostr(_HTTP_PORT));
