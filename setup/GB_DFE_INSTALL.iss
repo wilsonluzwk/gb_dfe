@@ -2,7 +2,7 @@
 
 [Setup]
 AppName=GBDFE
-AppVerName=GB_DFE_Service 27-03-2024
+AppVerName=GB_DFE_Service 07-04-2024
 AppPublisher=GB_DFE
 AppPublisherURL=https://www.gbinformatica.com.br/p_consultoriaeminformatica.php
 AppSupportURL=https://www.gbinformatica.com.br/p_consultoriaeminformatica.php

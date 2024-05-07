@@ -61,6 +61,7 @@ type
     Procedure GravaComplementoCte(octr: Integer; DANFE: TACBrCTe);
 
     Procedure GravaCteInfNFe(octr: Integer; DANFE: TACBrCTe);
+    Procedure GravaCteCobranca(octr: Integer; DANFE: TACBrCTe);
 
   strict private
   public
@@ -616,6 +617,7 @@ begin
         GravaRecebedorCte(rcdctr, DANFE);
         GravaComplementoCte(rcdctr, DANFE);
         GravaCteInfNFe(rcdctr, DANFE);
+        GravaCteCobranca(rcdctr, DANFE);
         Result := True;
         FdconNFE.Commit;
         GravaLog('[CTE]Importado ' + ochave + ' - ' + ' Com sucesso',
@@ -734,6 +736,7 @@ begin
     FreeAndNil(Qry);
   end;
 end;
+
 Procedure TDaoCte.GravaRemetenteCte(octr: Integer; DANFE: TACBrCTe);
 var
   Qry: TFDQuery;
@@ -1228,7 +1231,7 @@ begin
       ParamByName('CTEID').DataType := ftInteger;
       ParamByName('CHAVE').DataType := ftstring;
       ParamByName('PIN').DataType := ftstring;
-      ParamByName('DPREV').DataType := ftDateTime;
+      ParamByName('DPREV').DataType := ftdatetime;
 
     end;
     try
@@ -1250,6 +1253,101 @@ begin
       on e: exception do
         raise exception.Create
           ('      ->[1457 ]ERRO AO IMPORTAR IFORMACOES DE NFE DO CTE ' +
+          e.message);
+    end;
+  finally
+    FreeAndNil(Qry);
+  end;
+
+end;
+
+{ ----------------------------------------------------------------------------- }
+Procedure TDaoCte.GravaCteCobranca(octr: Integer; DANFE: TACBrCTe);
+var
+  Qry: TFDQuery;
+  I: Integer;
+begin
+  try
+    Qry := TFDQuery.Create(nil);
+    Qry.Connection := FdconNFE;
+    Query.SQL.Clear;
+    with Qry do
+    begin
+      SQL.add('INSERT INTO  cteFura');
+      SQL.add(' (            ');
+      SQL.add('  CTEID,      ');
+      SQL.add('  nFat ,      ');
+      SQL.add('  vOrig,      ');
+      SQL.add('  vDesc,      ');
+      SQL.add('  vLiq,       ');
+
+      SQL.add(' )            ');
+      SQL.add('VALUES        ');
+      SQL.add('   (          ');
+      SQL.add('    :CTEID,   ');
+      SQL.add('    :nFat,   ');
+      SQL.add('    :vOrig,  ');
+      SQL.add('    :vDesc,  ');
+      SQL.add('    :vLiq,  ');
+
+      SQL.add(' ) ');
+      ParamByName('CTEID').DataType := ftInteger;
+      ParamByName('nFat').DataType := ftstring;
+      ParamByName('vOrig').DataType := ftFloat;
+      ParamByName('vDesc').DataType := ftFloat;
+      ParamByName('vLiq').DataType := ftFloat;
+
+      ParamByName('CTEID').AsInteger := octr;
+      ParamByName('nFat').Asstring := DANFE.Conhecimentos[0]
+        .Cte.InfCTeNorm.cobr.fat.nFat;
+      ParamByName('vOrig').AsFloat := DANFE.Conhecimentos[0]
+        .Cte.InfCTeNorm.cobr.fat.vOrig;
+      ParamByName('vDesc').AsFloat := DANFE.Conhecimentos[0]
+        .Cte.InfCTeNorm.cobr.fat.vDesc;
+      ParamByName('vLiq').AsFloat := DANFE.Conhecimentos[0]
+        .Cte.InfCTeNorm.cobr.fat.vLiq;
+
+      Qry.ExecSQL;
+      Qry.SQL.Clear;
+
+      SQL.add('INSERT INTO  cteDublicata');
+      SQL.add(' (            ');
+      SQL.add('  CTEID,      ');
+      SQL.add('  nDup ,      ');
+      SQL.add('  dVenc,      ');
+      SQL.add('  vDup        ');
+      SQL.add(' )            ');
+      SQL.add('VALUES        ');
+      SQL.add('   (          ');
+      SQL.add('    :CTEID,   ');
+      SQL.add('    :nDup,    ');
+      SQL.add('    :dVenc,   ');
+      SQL.add('    :vDup     ');
+      SQL.add(' ) ');
+      ParamByName('CTEID').DataType := ftInteger;
+      ParamByName('nDup').DataType := ftstring;
+      ParamByName('dVenc').DataType := ftdatetime;
+      ParamByName('vDup').DataType := ftFloat;
+
+    end;
+    try
+      for I := 0 to DANFE.Conhecimentos[0].Cte.InfCTeNorm.cobr.dup.Count - 1 do
+      begin
+        Qry.ParamByName('CTEID').AsInteger := octr;
+        Qry.ParamByName('nDup').Asstring := DANFE.Conhecimentos[0]
+          .Cte.InfCTeNorm.cobr.dup[I].nDup;
+        Qry.ParamByName('dVenc').AsDateTime := DANFE.Conhecimentos[0]
+          .Cte.InfCTeNorm.cobr.dup[I].dVenc;
+
+        Qry.ParamByName('vDup').AsFloat := DANFE.Conhecimentos[0]
+          .Cte.InfCTeNorm.cobr.dup[I].vDup;
+
+        Qry.ExecSQL;
+      end;
+    except
+      on e: exception do
+        raise exception.Create
+          ('      ->[1457 ]ERRO AO IMPORTAR duplicatas/faturas DO CTE ' +
           e.message);
     end;
   finally

@@ -63,12 +63,14 @@ var
   FAcbrCte: TACBrCTe;
   AultNSU: string;
   LIndex: Integer;
+  LDir: string;
 begin
   FdaoEmpresa := TDaoEmpresa.Create;
-
+  LDir := ExtractFilePath(GetModuleName(HInstance)) + 'CTE\';
+  ForceDirectories(LDir);
   try
     FAcbrCte := TACBrCTe.Create(nil);
-    if HoursBetween(now.NowUTC,LEmpresa.NSU_DATA_CONSULTA_CTE) < 1 then
+    if HoursBetween(now.NowUTC, LEmpresa.NSU_DATA_CONSULTA_CTE) < 1 then
     begin
 
       exit;
@@ -109,19 +111,28 @@ begin
               LEmpresa.cnpj);
 
           end;
-          GravaLog('[CTE] Qtde Documentos Retornados: ' + inttostr(docZip.Count),
-            LEmpresa.cnpj);
+          GravaLog('[CTE] Qtde Documentos Retornados: ' +
+            inttostr(docZip.Count), LEmpresa.cnpj);
           GravaLog('[CTE] Status....: ' + inttostr(cStat), LEmpresa.cnpj);
           GravaLog('[CTE] Motivo....: ' + xMotivo, LEmpresa.cnpj);
           GravaLog('[CTE] Último NSU: ' + ultNSU, LEmpresa.cnpj);
           GravaLog('[CTE] Máximo NSU: ' + maxNSU, LEmpresa.cnpj);
-          if (cStat <> 137 ) and (cStat = 137) then
-          
-          for LIndex := 0 to docZip.Count - 1 do
+          if (cStat <> 137) and (cStat = 137) then
           begin
-            LdocZip := docZip[LIndex];
-            SetConsulta;
-            SetLogSchema();
+            for LIndex := 0 to docZip.Count - 1 do
+            begin
+              // docZip[LIndex].sa
+              LdocZip := docZip[LIndex];
+              With TStringList.Create do
+              begin
+                text := LdocZip.XML;
+                SaveToFile(LDir + '\' + LdocZip.NSU + '_' + inttostr(LIndex)
+                  + '.xml');
+                free;
+              end;
+              SetConsulta;
+              SetLogSchema();
+            end;
           end;
         except
           on e: exception do
@@ -156,12 +167,14 @@ end;
 procedure TThreadCte.SetConsulta;
 begin
   var
+    LNSU: string;
+  var
   dto := TDtoCteConsulta.Create;
   var
   LResourceCteConsulta := TResourceCteconsulta.Create;
   try
     dto.CodigoLoja := StrToInt(LEmpresa.codigo_loja);
-    dto.Nsu := LdocZip.Nsu;
+    dto.NSU := LdocZip.NSU;
     dto.Chdfe := LdocZip.resDFe.Chdfe;
     dto.Cnpjcpf := LdocZip.resDFe.Cnpjcpf;
     dto.Xnome := LdocZip.resDFe.Xnome;
@@ -182,7 +195,12 @@ begin
     dto.Eventodhrecbto := LdocZip.resEvento.Dhrecbto;
     dto.Eventonprot := LdocZip.resEvento.Nprot;
     dto.XML := LdocZip.XML;
-    LResourceCteConsulta.Post(nil, tjson.ObjectToJsonObject(dto));
+    LResourceCteConsulta.Get(nil, 1, 50, '', '', '{nsu:' + QuotedStr(dto.NSU) +
+      '}', '', '', nil);
+    LResourceCteConsulta.OutpuJson.TryGetValue<string>('nsu', LNSU);
+    if LNSU = '' then
+
+      LResourceCteConsulta.Post(nil, tjson.ObjectToJsonObject(dto));
   finally
     FreeAndNil(dto);
     FreeAndNil(LResourceCteConsulta);
@@ -196,30 +214,30 @@ begin
   try
     case LdocZip.schema of
       schresCTe:
-        GravaLog('CTE] ' + inttostr(I + 1) + ' NSU: ' + LdocZip.Nsu +
+        GravaLog('CTE] ' + inttostr(I + 1) + ' NSU: ' + LdocZip.NSU +
           ' (Resumo DFe) Chave: ' + LdocZip.resDFe.Chdfe, LEmpresa.cnpj);
 
       schprocCTe:
         begin
-          GravaLog('CTE] ' + inttostr(I + 1) + ' NSU: ' + LdocZip.Nsu +
+          GravaLog('CTE] ' + inttostr(I + 1) + ' NSU: ' + LdocZip.NSU +
             ' (CTe Completa) Chave: ' + LdocZip.resDFe.Chdfe, LEmpresa.cnpj);
           GravarCteCompleto;
         end;
 
       schprocCTeOS:
-        GravaLog('CTE] ' + inttostr(I + 1) + ' NSU: ' + LdocZip.Nsu +
+        GravaLog('CTE] ' + inttostr(I + 1) + ' NSU: ' + LdocZip.NSU +
           ' (CTeOS Completa) Chave: ' + LdocZip.resDFe.Chdfe, LEmpresa.cnpj);
 
       schprocGTVe:
-        GravaLog('CTE] ' + inttostr(I + 1) + ' NSU: ' + LdocZip.Nsu +
+        GravaLog('CTE] ' + inttostr(I + 1) + ' NSU: ' + LdocZip.NSU +
           ' (GTVe Completa) Chave: ' + LdocZip.resDFe.Chdfe, LEmpresa.cnpj);
 
       schresEvento:
-        GravaLog('CTE] ' + inttostr(I + 1) + ' NSU: ' + LdocZip.Nsu +
+        GravaLog('CTE] ' + inttostr(I + 1) + ' NSU: ' + LdocZip.NSU +
           ' (Resumo Evento) Chave: ' + LdocZip.resEvento.Chdfe, LEmpresa.cnpj);
 
       schprocEventoCTe:
-        GravaLog('[CTE] ' + inttostr(I + 1) + ' NSU: ' + LdocZip.Nsu +
+        GravaLog('[CTE] ' + inttostr(I + 1) + ' NSU: ' + LdocZip.NSU +
           ' (Evento Completo) ID: ' + LdocZip.procEvento.Id, LEmpresa.cnpj);
     end;
   except
