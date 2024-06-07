@@ -81,14 +81,15 @@
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <DCC_ExeOutput>.\bin</DCC_ExeOutput>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_MajorVer>2023</VerInfo_MajorVer>
+        <VerInfo_MajorVer>2024</VerInfo_MajorVer>
         <VerInfo_MinorVer>6</VerInfo_MinorVer>
         <VerInfo_Release>27</VerInfo_Release>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=Ws informatica;FileDescription=$(MSBuildProjectName);FileVersion=2023.6.27.1000;InternalName=Nfe Service;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=Nfe Service;ProductName=$(MSBuildProjectName);ProductVersion=2021.9.23.1000;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Ws informatica;FileDescription=$(MSBuildProjectName);FileVersion=2024.6.27.1000;InternalName=Nfe Service;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=Nfe Service;ProductName=$(MSBuildProjectName);ProductVersion=2021.9.23.1000;Comments=</VerInfo_Keys>
         <Manifest_File>(None)</Manifest_File>
         <VerInfo_Build>1000</VerInfo_Build>
         <DCC_UnitSearchPath>.\lib\components;.\lib\jwt;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -236,9 +237,17 @@
                     <Source Name="MainSource">GB_DFE_Server.dpr</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k260.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\desenv\componentes\acbr\Lib\Delphi\LibD26\Win32\DCLACBr_Ponto.bpl">ACBr - (design-time) Ponto Eletrônico - (http://www.projetoacbr.com.br/)</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\fortesreport-ce\Binary\LibD28\dclfrce.bpl">Fortes Report Comunity Edition (design-time)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Abr\Lib\Delphi\LibD28\Win32\DCLACBr_NFeDanfeRL.bpl">ACBr - (design-time) DANFe em Fortes Report - (http://www.projetoacbr.com.br/)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Abr\Lib\Delphi\LibD28\Win32\DCLACBr_NFSeDanfseRL.bpl">ACBr - (design-time) DANFSe em Fortes Report - (http://www.projetoacbr.com.br/)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Abr\Lib\Delphi\LibD28\Win32\DCLACBr_NFSeXDanfseRL.bpl">ACBr - (design-time) DANFSe X em Fortes Report - (http://www.projetoacbr.com.br/)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Abr\Lib\Delphi\LibD28\Win32\DCLACBr_CTeDacteRL.bpl">ACBr - (design-time) DACTe em Fortes Report - (http://www.projetoacbr.com.br/)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Abr\Lib\Delphi\LibD28\Win32\DCLACBr_BoletoRL.bpl">ACBr - (design-time) Boleto Impressão em Fortes Report - (http://www.projectoacbr.com.br/)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Abr\Lib\Delphi\LibD28\Win32\DCLACBr_MDFeDamdfeRL.bpl">ACBr - (design-time) DAMDFe em Fortes Report - (http://www.projetoacbr.com.br/)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Abr\Lib\Delphi\LibD28\Win32\DCLACBr_SATExtratoRL.bpl">ACBr - (design-time) Extrato Cupom Fiscal Eletrônico SAT para Fortes Report - (http://www.projectoacbr.com.br/)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Abr\Lib\Delphi\LibD28\Win32\DCLACBr_GNREGuiaRL.bpl">ACBr - (design-time) GNRE Impressão em Fortes Report - (http://www.projectoacbr.com.br/)</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">

@@ -622,7 +622,7 @@ begin
     HWND := 0;
     if path = '' then
       path := 'Global';
-    strSaida := FormatDateTime('hh:nn:ss.zzz', now) + ' V1802 - ' + mensagem;
+    strSaida := FormatDateTime('hh:nn:ss.zzz', now) + ' V0206 - ' + mensagem;
     if IsConsole then
       Writeln(strSaida);
     registrarLogEmArquivo;

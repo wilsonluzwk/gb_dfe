@@ -1,0 +1,27 @@
+USE [NFe]
+GO
+
+/****** Object:  Table [dbo].[cteDuplicata]    Script Date: 07/05/2024 10:36:14 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[cteDuplicata](
+	[cteId] [int] NOT NULL,
+	[nDup] [varchar](20) NULL,
+	[vDup] [numeric](12, 2) NULL,
+	[dVenc] [datetime] NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[cteDuplicata]  WITH CHECK ADD  CONSTRAINT [cteDuplicata_FK] FOREIGN KEY([cteId])
+REFERENCES [dbo].[cteIde] ([CTEID])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[cteDuplicata] CHECK CONSTRAINT [cteDuplicata_FK]
+GO
+
+

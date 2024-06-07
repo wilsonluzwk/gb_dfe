@@ -266,8 +266,8 @@ begin
       Query.Open;
       I := Query.RecordCount;
       if I > 0 then
-        raise exception.Create('DANFE CTE JÁ IMPORTADO ->  ' +
-          SoNumeros(DANFE.Conhecimentos[0].Cte.InfCte.Id));
+        raise exception.Create('[CTE] ESTE DANFE  DANFE   ' +
+          SoNumeros(DANFE.Conhecimentos[0].Cte.InfCte.Id) +' JÁ FOI IMPORTADO !!!, FAÇA O FAVOR DE NÃO ALEGAR QUE  NÃO ESTA IMPORTANDO.');
       try
         if FdconNFE.InTransaction then
           FdconNFE.Rollback;
@@ -1273,7 +1273,7 @@ begin
     Query.SQL.Clear;
     with Qry do
     begin
-      SQL.add('INSERT INTO  cteFura');
+      SQL.add('INSERT INTO  cteFatura');
       SQL.add(' (            ');
       SQL.add('  CTEID,      ');
       SQL.add('  nFat ,      ');
